@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld</title>
+    <link rel="stylesheet" href="/style.css">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+</head>
+<body>
+<!--<script type="text/javascript">
+    $(document).ready(function () {
+        $("#popup").hide();
+        $('.youtube-video')[0].contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+        $(".trailer").click(function (e) {
+            e.preventDefault();
+            $("iframe").attr("src", $(this).attr('href'));
+            $("#popup").fadeIn('fast');
+        });
+
+        $(".close").click(function () {
+            $(this).parent().hide();
+            $('.youtube-video')[0].contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+        });
+    });
+</script>-->
+<header>
+    <div id="logo"><a href="/"><img src="" th:src="@{/img/grilld.png}" width="393px;" alt="" /></a></div>
+</header>
+
+<main>
+    <div class="margin-top margin_auto" th:if="${dishes != null and !dishes.isEmpty()}">
+        <div th:each="dish:${dishes}">
+            <h4><span th:text="${dish.name}"></span></h4>
+            <p th:text="${dish.desc} ?: '-'"></p>
+            <p th:text="${'Price: '+dish.price}"></p>
+            <p>Ingredients:
+                <span th:each="ingredient:${dish.ingredients}" th:text="${ingredient+' '}"></span>
+            </p>
+        </div>
+    </div>
+    <div th:if="${dishes == null or dishes.isEmpty()}">
+        <h3>Nothing found sorry</h3>
+    </div>
+</main>
+</body>
+</html>
