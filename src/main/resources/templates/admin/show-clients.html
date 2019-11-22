@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld Admin - all clients</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+    <div class="margin_auto">
+        <h1><a class="btn_log" th:if="${session.logged == true}" href="/logout">log out</a> Admin Panel - <a href="dishes">dishes</a> | <a href="clients">[clients]</a></h1><br/>
+        <div class="flex" th:if="${clients != null}">
+            <table class="info_table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tlf</th>
+                        <th scope="col">Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="client:${clients}">
+                        <td th:text="${client.id}"></td>
+                        <td th:text="${client.tlf}"></td>
+                        <td th:text="${client.name}"></td>
+                        <td><a class="btn_edit">Edit</a><a class="btn_delete" th:href="@{'clients/delete/' + ${client.id}}">Delete</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div th:if="${message != null}">
+                <span class="msg" th:text="${message}"></span>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
