@@ -17,40 +17,75 @@ public class OrdersRepository {
     @Autowired
     private JdbcTemplate jdbc;
 
-    List<Order> findAllOrders() {
+    List<Takeaway> findAllTakeaways(int restaurant) {
         try {
-            String query = ("SELECT order_invoice.id as order_id, date_time, status, tlf FROM order_invoice "+
-                    "INNER JOIN client_list ON order_invoice.client_ref = client_list.id"+
+            String query = ("SELECT order_takeaway.id as order_id, ordered_on, status, tlf FROM order_takeaway "+
+                    "INNER JOIN client_list ON order_takeaway.client_ref = client_list.id " +
+                    "INNER JOIN restaurant_list ON order_takeaway.restaurant_ref = restaurant_list.id " +
+                    "WHERE order_takeaway.restaurant_ref = "+restaurant+
                     " ORDER BY order_id DESC");
             SqlRowSet rs = jdbc.queryForRowSet(query);
 
-            List<Order> orderList = new ArrayList<>();
+            List<Takeaway> takeawayList = new ArrayList<>();
 
             while (rs.next()) {
-                Order order = new Order();
+                Takeaway takeaway = new Takeaway();
                 Client client = new Client();
                 client.setTlf(rs.getString("tlf"));
-                order.setId(rs.getInt("order_id"));
-                order.setClient(client);
-                order.setOrder_time(LocalDateTime.parse(rs.getString("date_time"), formatter));
-                order.setStatus(rs.getInt("status"));
-                orderList.add(order);
+                takeaway.setId(rs.getInt("order_id"));
+                takeaway.setClient(client);
+                takeaway.setOrder_time(LocalDateTime.parse(rs.getString("ordered_on"), formatter));
+                takeaway.setStatus(rs.getInt("status"));
+                takeawayList.add(takeaway);
             }
-            return orderList;
+            return takeawayList;
         } catch (Exception e) {
             return null;
         }
     }
 
-    void deleteOrder(int id) {
-        jdbc.update("DELETE FROM order_invoice WHERE id = " +id +" ");
+    void deleteTakeaway(int id) {
+        jdbc.update("DELETE FROM order_takeaway WHERE id = " +id +" ");
     }
 
-    void updateOrder(Order order) {
-        jdbc.update("UPDATE order_invoice SET " +
-                "date_time='" + order.getOrder_time() + "', " +
-                "client_ref=" + order.getClient().getId() + ", " +
-                "status=" + order.getStatus() + ", " +
-                "WHERE id = " + order.getId()+ " ");
+    void updateTakeaway(Takeaway takeaway) {
+        jdbc.update("UPDATE order_takeaway SET " +
+                "ordered_on='" + takeaway.getOrder_time() + "', " +
+                "restaurant_ref='" + takeaway.getRestaurant().getId() + "', " +
+                "client_ref=" + takeaway.getClient().getId() + ", " +
+                "status=" + takeaway.getStatus() + ", " +
+                "WHERE id = " + takeaway.getId()+ " ");
+    }
+
+    List<Reservation> findAllReservations(int restaurant) {
+        try {
+            String query = ("SELECT order_table.id as order_id, ordered_on, guests_amount, ordered_for, tlf FROM order_takeaway "+
+                    "INNER JOIN client_list ON order_table.client_ref = client_list.id " +
+                    "INNER JOIN restaurant_list ON order_table.restaurant_ref = restaurant_list.id " +
+                    "WHERE order_table.restaurant_ref = "+restaurant+
+                    " ORDER BY order_id DESC");
+            SqlRowSet rs = jdbc.queryForRowSet(query);
+
+            List<Reservation> reservationList = new ArrayList<>();
+
+            return reservationList;
+        } catch (Exception e) {
+            return null;
+        }
+
+
+    }
+
+    void deleteReservation(int id) {
+        jdbc.update("DELETE FROM order_table WHERE id = " +id +" ");
+    }
+
+    void updateReservation(Reservation reservation) {
+        jdbc.update("UPDATE order_takeaway SET " +
+                "ordered_for='" + reservation.getOrder_for() + "', " +
+                "restaurant_ref='" + reservation.getRestaurant().getId() + "', " +
+                "client_ref=" + reservation.getClient().getId() + ", " +
+                "guests_amount=" + reservation.getGuests() + ", " +
+                "WHERE id = " + reservation.getId()+ " ");
     }
 }

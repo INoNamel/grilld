@@ -16,9 +16,9 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Meal</th>
                         <th scope="col">Description</th>
                         <th scope="col">Price</th>
-                        <th scope="col">Ingredients</th>
                         <th scope="col">Display?</th>
                     </tr>
                 </thead>
@@ -26,11 +26,9 @@
                     <tr th:each="dish:${dishes}">
                         <td th:text="${dish.id}"></td>
                         <td th:text="${dish.name}"></td>
+                        <td th:text="${dish.meal.type}"></td>
                         <td th:text="${dish.desc}"></td>
                         <td th:text="${dish.price}"></td>
-                        <td>
-                            <span th:each="ingredient:${dish.ingredients}" th:text="${ingredient+'; '}"></span>
-                        </td>
                         <td th:text="${dish.available}"></td>
 
                         <td>

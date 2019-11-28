@@ -1,12 +1,14 @@
 package com.grilled;
 
+import org.springframework.lang.Nullable;
+
 public class Dish {
 
     private int id;
     private String name, desc;
-    private String[] ingredients;
     private double price;
     private boolean available = true;
+    private Meal meal;
 
     Dish(){}
 
@@ -30,16 +32,8 @@ public class Dish {
         return desc;
     }
 
-    public void setDesc(String desc) {
+    public void setDesc(@Nullable String desc) {
         this.desc = desc;
-    }
-
-    public String[] getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(String[] ingredients) {
-        this.ingredients = ingredients;
     }
 
     public double getPrice() {
@@ -56,5 +50,13 @@ public class Dish {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public Meal getMeal() {
+        return meal;
+    }
+
+    public void setMeal(Meal meal) {
+        this.meal = meal;
     }
 }

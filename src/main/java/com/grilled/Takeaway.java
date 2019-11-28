@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
-public class Order {
+public class Takeaway {
     private DateTimeFormatter day = DateTimeFormatter.ofPattern("MMMM d EEEE"), time = DateTimeFormatter.ofPattern("HH:mm");
 
     private int id, status = 0;
@@ -15,6 +15,7 @@ public class Order {
     private LocalDateTime order_time;
 
     private Client client;
+    private Restaurant restaurant;
 
 
     public int getId() {
@@ -84,5 +85,13 @@ public class Order {
                 break;
         }
         return status_ref;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 }

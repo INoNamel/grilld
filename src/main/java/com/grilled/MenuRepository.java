@@ -18,19 +18,23 @@ public class MenuRepository {
 
     Dish findDish(int id) {
         try {
-            String query = ("SELECT * " +
+            String query = ("SELECT dish_list.id as id, meal_type.id as meal_id, name, type, description, price, available " +
                     "FROM dish_list " +
-                    "WHERE id = '"+id+"' ");
+                    "INNER JOIN meal_type ON dish_list.meal_ref = meal_type.id " +
+                    "WHERE id = "+id+" ");
             SqlRowSet rs = jdbc.queryForRowSet(query);
             Dish dish = new Dish();
 
             while (rs.next()) {
+                Meal meal = new Meal();
+                meal.setId(rs.getInt("meal_id"));
+                meal.setType(rs.getString("type"));
+
                 dish.setId(rs.getInt("id"));
                 dish.setName(rs.getString("name"));
+                dish.setMeal(meal);
                 dish.setDesc(rs.getString("description"));
                 dish.setPrice(rs.getDouble("price"));
-                String[] ingredients = rs.getString("ingredients").split(";");
-                dish.setIngredients(ingredients);
                 dish.setAvailable(rs.getBoolean("available"));
             }
 
@@ -41,7 +45,7 @@ public class MenuRepository {
     }
 
     List<Dish> findAllDishes(boolean display, @Nullable String like) {
-        try {
+        /*try {*/
 
             String show = "";
             String search = "";
@@ -50,46 +54,76 @@ public class MenuRepository {
                 show = " WHERE available IS true ";
             }
             if(like != null) {
-                search = " AND ingredients LIKE '%"+like+"%' ";
+                search = " AND type LIKE '%"+like+"%' ";
             }
 
-            String query = ("SELECT * FROM dish_list " + show + search +
-                    " ORDER BY id DESC");
+            String query = ("SELECT dish_list.id as id, meal_type.id as meal_id, name, type, description, price, available " +
+                    "FROM dish_list " +
+                    "INNER JOIN meal_type ON dish_list.meal_ref = meal_type.id " + show + search +
+                    "ORDER BY dish_list.id DESC");
             SqlRowSet rs = jdbc.queryForRowSet(query);
 
             List<Dish> dishList = new ArrayList<>();
 
             while (rs.next()) {
                 Dish dish = new Dish();
+                Meal meal = new Meal();
+                meal.setId(rs.getInt("meal_id"));
+                meal.setType(rs.getString("type"));
+
                 dish.setId(rs.getInt("id"));
                 dish.setName(rs.getString("name"));
+                dish.setMeal(meal);
                 dish.setDesc(rs.getString("description"));
                 dish.setPrice(rs.getDouble("price"));
-                String[] ingredients = rs.getString("ingredients").split(";");
-                dish.setIngredients(ingredients);
                 dish.setAvailable(rs.getBoolean("available"));
                 dishList.add(dish);
             }
 
         return dishList;
 
-        } catch (Exception e) {
+        /*} catch (Exception e) {
             return null;
-        }
+        }*/
     }
 
     void deleteDish(int id) {
         jdbc.update("DELETE FROM dish_list WHERE id = " +id +" ");
     }
 
+    void addDish(Dish dish) {
+        jdbc.update(
+                "INSERT INTO dish_list " +
+                    "(name, meal_ref, description, price) " +
+                    "VALUES ('" + dish.getName() + "', " + dish.getMeal().getId() + ", " + dish.getDesc() + ", " + dish.getPrice() + ")");
+    }
+
     void updateDish(Dish dish) {
-        String ingredients = String.join(";", dish.getIngredients());
         jdbc.update("UPDATE dish_list SET " +
                 "name='" + dish.getName() + "', " +
+                "meal_ref='" + dish.getMeal() + "', " +
                 "description=" + dish.getDesc() + ", " +
                 "price=" + dish.getPrice() + ", " +
-                "ingredients=" + ingredients + ", " +
                 "available=" + dish.isAvailable() + ", " +
                 "WHERE id = " + dish.getId()+ " ");
+    }
+
+    List<Meal> findAllMeals() {
+        try {
+            String query = ("SELECT * " +
+                    "FROM meal_type ");
+            SqlRowSet rs = jdbc.queryForRowSet(query);
+
+            List<Meal> mealList = new ArrayList<>();
+            while (rs.next()) {
+                Meal meal = new Meal();
+                meal.setId(rs.getInt("id"));
+                meal.setType(rs.getString("type"));
+                mealList.add(meal);
+            }
+        return mealList;
+        }  catch (Exception e) {
+            return null;
+        }
     }
 }

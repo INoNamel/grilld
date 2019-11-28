@@ -20,12 +20,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="order:${orders}">
-                        <td th:text="${order.id}"></td>
-                        <td th:text="${order.getDay()+' '+order.getTime()}"></td>
-                        <td th:text="${order.client.tlf}"></td>
-                        <td th:text="${order.displayStatus()}"></td>
-                        <td><a class="btn_edit">Edit</a><a class="btn_delete" th:href="@{'orders/delete/' + ${order.id}}">Delete</a></td>
+                    <tr th:each="takeaway:${orders}">
+                        <td th:text="${takeaway.id}"></td>
+                        <td th:text="${takeaway.getDay()+' '+takeaway.getTime()}"></td>
+                        <td th:text="${takeaway.client.tlf}"></td>
+                        <td th:text="${takeaway.displayStatus()}"></td>
+                        <td><a class="btn_edit">Edit</a><a class="btn_delete" th:href="@{'orders/delete/' + ${takeaway.id}}">Delete</a></td>
                     </tr>
                 </tbody>
             </table>

@@ -42,8 +42,10 @@ public class LoginController {
             session.setAttribute("auth_name", login.getName());
             if(login.getType().equals("admin")) {
                 return "redirect:/admin/dishes";
+            } else if(login.getType().equals("employee")){
+                return "redirect:/admin/takeaways";
             } else {
-                return "redirect:/admin/orders";
+                return "redirect:/admin";
             }
         } else {
             return "redirect:/admin";
