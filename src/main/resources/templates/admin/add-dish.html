@@ -16,7 +16,7 @@
                 </div>
                 <div>
                     Meal type: <br>
-                    <select th:field="${dishForm.meal.type}" required>
+                    <select th:field="${dishForm.meal.id}" required>
                         <option th:each="meal:${meals}" th:value="${meal.id}" th:text="${meal.type}"></option>
                     </select>
                 </div>

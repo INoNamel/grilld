@@ -45,7 +45,7 @@ public class LoginController {
             } else if(login.getType().equals("employee")){
                 return "redirect:/admin/takeaways";
             } else {
-                return "redirect:/admin";
+                return "redirect:/";
             }
         } else {
             return "redirect:/admin";

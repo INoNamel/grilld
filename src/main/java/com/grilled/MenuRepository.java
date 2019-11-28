@@ -95,7 +95,7 @@ public class MenuRepository {
         jdbc.update(
                 "INSERT INTO dish_list " +
                     "(name, meal_ref, description, price) " +
-                    "VALUES ('" + dish.getName() + "', " + dish.getMeal().getId() + ", " + dish.getDesc() + ", " + dish.getPrice() + ")");
+                    "VALUES ('" + dish.getName() + "', " + dish.getMeal().getId() + ", '" + dish.getDesc() + "', " + dish.getPrice() + ")");
     }
 
     void updateDish(Dish dish) {
