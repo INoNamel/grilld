@@ -6,20 +6,22 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<header>
+<header th:fragment="header">
     <div id="logo"><a href="/"><img src="" th:src="@{/img/grilld.png}" height="125px;" alt="" /></a></div>
-    <div>
-        <h2><a href="">Restaurants - </a><a href="">Reservations - </a><a href="">Take Away - </a><a href="">Menu</a></h2>
+    <div id="nav_menu">
+        <h2><a href="/">Menu</a> - <a href="/reservation">Reserve Table</a> - <a href="/take-away">Take Away</a>
+        <a th:if="${session.auth_type == 'admin' or session.auth_type == 'employee'}" href="/admin/dishes"> - Admin</a>
+        <a th:if="${session.auth_type == 'employee'}" href="/admin/take-aways"> - Admin</a>
+        </h2>
     </div>
     <div id="login">
-        <h1 th:if="${session.logged == null}" ><a href="/admin" >Sign up | Log in</a></h1>
-        <h1 th:if="${session.logged == true}" >
+        <h1 th:if="${session.logged == null}"><a href="/signup" >Sign up</a> | <a href="/login">Log in</a></h1>
+        <h1 th:if="${session.logged == true}">
             <span th:text="${session.auth_name}"></span>
             <a class="btn_log" href="/logout">log out</a>
         </h1>
     </div>
 </header>
-
 <main>
     <div class="margin-top-130-auto">
         <h1>Menu</h1>

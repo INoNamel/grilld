@@ -15,6 +15,9 @@ header {
 #login {
     margin: 20px 20px 0 0;
 }
+#nav_menu {
+    align-self: flex-end;
+}
 img {
     display:block;
 }
@@ -28,13 +31,9 @@ a:active, a:hover, a:visited, a:link {
     vertical-align: middle;
 }
 #msg {
-    position: fixed;
-    width: 180px;
-}
-.msg {
-    font-size: 20px;
-    position: fixed;
-    margin-left: 40px;
+    border: 1px solid purple;
+    font-size: 18px;
+    padding: 8px;
 }
 .submit_btn {
     margin-top: 20px;
@@ -51,7 +50,7 @@ a:active, a:hover, a:visited, a:link {
 #menu {
     display: flex;
     flex-wrap: wrap;
-    max-width: 1000px;
+    max-width: 1260px;
 }
 .menu-item {
     flex-basis: 25%;
@@ -60,14 +59,40 @@ a:active, a:hover, a:visited, a:link {
 .menu-item div {
     height: 300px;
     padding: 15px;
-    margin: 0 15px 0 15px;
+    margin: 15px;
     background-color: lightgray;
+}
+#restaurants {
+    width: 1000px;
+}
+.restaurant {
+    padding: 25px;
+    border: 1px solid black;
+}
+.reservation_left {
+    margin: 20px 30px 20px 30px;
+}
+.reservation_right {
+    margin: 20px 30px 20px 0px;
+    padding-left: 30px;
+}
+.reservation_info {
+    width: 100%;
+    border-collapse: collapse;
+    font-weight: 500;
+    border: 1px solid lightgray;
+}
+.reservation_info tr td {
+    padding: 20px;
+}
+#opening_hours {
+    border-left: 1px solid black;
 }
 .flex {
     display: flex;
 }
 .flex-evenly {
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 .margin_auto {
     margin: auto;
@@ -118,6 +143,7 @@ a:active, a:hover, a:visited, a:link {
     min-width: 700px;
     max-width: 1200px;
     border-collapse: collapse;
+    margin-top: 20px;
     margin-bottom: 60px;
     width: 100%;
 }

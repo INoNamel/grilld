@@ -20,7 +20,7 @@ public class OrdersRepository {
     List<Takeaway> findAllTakeaways(int restaurant) {
         try {
             String query = ("SELECT order_takeaway.id as order_id, ordered_on, status, tlf FROM order_takeaway "+
-                    "INNER JOIN client_list ON order_takeaway.client_ref = client_list.id " +
+                    "INNER JOIN client_list ON order_takeaway.client_ref = client_list.tlf " +
                     "INNER JOIN restaurant_list ON order_takeaway.restaurant_ref = restaurant_list.id " +
                     "WHERE order_takeaway.restaurant_ref = "+restaurant+
                     " ORDER BY order_id DESC");
@@ -30,10 +30,10 @@ public class OrdersRepository {
 
             while (rs.next()) {
                 Takeaway takeaway = new Takeaway();
-                Client client = new Client();
-                client.setTlf(rs.getString("tlf"));
+                Login login = new Login();
+                login.setTlf_type(rs.getString("tlf"));
                 takeaway.setId(rs.getInt("order_id"));
-                takeaway.setClient(client);
+                takeaway.setLogin(login);
                 takeaway.setOrder_time(LocalDateTime.parse(rs.getString("ordered_on"), formatter));
                 takeaway.setStatus(rs.getInt("status"));
                 takeawayList.add(takeaway);
@@ -52,7 +52,7 @@ public class OrdersRepository {
         jdbc.update("UPDATE order_takeaway SET " +
                 "ordered_on='" + takeaway.getOrder_time() + "', " +
                 "restaurant_ref='" + takeaway.getRestaurant().getId() + "', " +
-                "client_ref=" + takeaway.getClient().getId() + ", " +
+                "client_ref=" + takeaway.getLogin().getTlf_type() + ", " +
                 "status=" + takeaway.getStatus() + ", " +
                 "WHERE id = " + takeaway.getId()+ " ");
     }
@@ -60,7 +60,7 @@ public class OrdersRepository {
     List<Reservation> findAllReservations(int restaurant) {
         try {
             String query = ("SELECT order_table.id as order_id, ordered_on, guests_amount, ordered_for, tlf FROM order_takeaway "+
-                    "INNER JOIN client_list ON order_table.client_ref = client_list.id " +
+                    "INNER JOIN client_list ON order_table.client_ref = client_list.tlf " +
                     "INNER JOIN restaurant_list ON order_table.restaurant_ref = restaurant_list.id " +
                     "WHERE order_table.restaurant_ref = "+restaurant+
                     " ORDER BY order_id DESC");
@@ -84,8 +84,16 @@ public class OrdersRepository {
         jdbc.update("UPDATE order_takeaway SET " +
                 "ordered_for='" + reservation.getOrder_for() + "', " +
                 "restaurant_ref='" + reservation.getRestaurant().getId() + "', " +
-                "client_ref=" + reservation.getClient().getId() + ", " +
+                "client_ref=" + reservation.getLogin().getTlf_type() + ", " +
                 "guests_amount=" + reservation.getGuests() + ", " +
                 "WHERE id = " + reservation.getId()+ " ");
+    }
+
+    void addReservation(Reservation reservation) {
+        jdbc.update(
+                "INSERT INTO order_table (restaurant_ref, guests_amount, ordered_for, client_ref) VALUES (?, ?, ?, ?)",
+                reservation.getRestaurant().getId(), reservation.getGuests(), reservation.getOrder_for(), reservation.getLogin().getTlf_type()
+        );
+
     }
 }

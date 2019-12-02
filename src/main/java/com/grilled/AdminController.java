@@ -1,13 +1,16 @@
 package com.grilled;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.time.DateTimeException;
 
 @Controller
 public class AdminController {
@@ -22,11 +25,38 @@ public class AdminController {
     private ClientsRepository clientsRepo;
 
     @Autowired
+    private EmployeesRepository employeesRepo;
+
+    @Autowired
     private OrdersRepository ordersRepo;
 
     @Autowired
     private LoginRepository loginRepo;
 
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public String handleMysqlDataTruncation(DataIntegrityViolationException ex) {
+        return "error/405";
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public String handleIllegalArgumentException(IllegalArgumentException ex) {
+        return "error/405";
+    }
+
+    @ExceptionHandler({NumberFormatException.class})
+    public String handleTypeMismatch(NumberFormatException ex) {
+        return "error/405";
+    }
+
+    @ExceptionHandler({DateTimeException.class})
+    public String handleDateTimeException(DateTimeException ex) {
+        return "error/405";
+    }
+
+    @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
+    public String handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
+        return "redirect:/";
+    }
 
     @GetMapping("/admin/{directory}")
     public String navigateTo(@PathVariable(name = "directory") String directory, Model model){
@@ -42,21 +72,26 @@ public class AdminController {
                         model.addAttribute(directory, clientsRepo.findAllClients());
                         return "admin/show-clients";
                     }
+                case ("employees"):
+                    if(session.getAttribute("auth_type").equals("admin")) {
+                        model.addAttribute(directory, employeesRepo.findAllEmployees());
+                        return "admin/show-employees";
+                    }
                 case ("reservations"):
                     if(session.getAttribute("auth_type").equals("employee")) {
                         model.addAttribute(directory, ordersRepo.findAllReservations(1));
                         return "admin/show-reservations";
                     }
-                case ("takeaways"):
+                case ("take-aways"):
                     if(session.getAttribute("auth_type").equals("employee")) {
                         model.addAttribute(directory, ordersRepo.findAllTakeaways(1));
                         return "admin/show-takeaways";
                     }
                 default:
-                    return "redirect:/";
+                    return "error/404";
             }
         } else {
-            return "redirect:/admin";
+            return "error/403";
         }
     }
 
@@ -74,14 +109,14 @@ public class AdminController {
                 case ("reservations"):
                     ordersRepo.deleteReservation(Integer.parseInt(id));
                     return "redirect:/admin/reservations";
-                case ("takeaways"):
+                case ("take-aways"):
                     ordersRepo.deleteTakeaway(Integer.parseInt(id));
-                    return "redirect:/admin/takeaways";
+                    return "redirect:/admin/take-aways";
                 default:
-                    return "redirect:/";
+                    return "error/404";
             }
         } else {
-            return "redirect:/admin";
+            return "error/403";
         }
     }
 
@@ -103,10 +138,10 @@ public class AdminController {
                     model.addAttribute("employeeForm", new Login());
                     return "admin/add-employee";
                 default:
-                    return "redirect:/";
+                    return "error/404";
             }
         } else {
-            return "redirect:/admin";
+            return "error/403";
         }
     }
 
@@ -122,7 +157,7 @@ public class AdminController {
                 return "redirect:/admin/dishes";
             }
         } else {
-            return "redirect:/admin";
+            return "error/403";
         }
     }
 }

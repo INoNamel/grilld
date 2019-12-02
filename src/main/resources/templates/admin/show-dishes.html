@@ -6,10 +6,12 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<header th:insert="index.html :: header"></header>
 <main>
-    <div class="margin_auto">
-        <h1><a class="btn_log" th:if="${session.logged == true}" href="/logout">log out</a> Admin Panel - <a href="dishes">[dishes]</a> | <a href="clients">clients</a></h1><br/>
-        <a class="btn_add" href="dishes/add">Add</a><br/><br/>
+    <div class="margin-top-130-auto">
+        <h1>Admin Panel - <a href="dishes">[dishes]</a> | <a href="clients">clients</a> | <a href="employees">employees</a></h1><br/>
+        <a class="btn_add" href="dishes/add">Add</a>
+        <span id="msg" th:if="${message != null}" th:text="${message}"></span>
         <div class="flex" th:if="${dishes != null}">
             <table class="info_table">
                 <thead>
@@ -38,9 +40,6 @@
                     </tr>
                 </tbody>
             </table>
-            <div th:if="${message != null}">
-                <span class="msg" th:text="${message}"></span>
-            </div>
         </div>
     </div>
 </main>

@@ -6,9 +6,13 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<header th:insert="index.html :: header"></header>
 <main>
-    <div class="margin_auto">
-        <h1><a class="btn_log" th:if="${session.logged == true && session.auth_type == employee}" href="/logout">log out</a> Admin Panel - <a href="orders">orders</a></h1><br/>
+    <div class="margin-top-130-auto">
+        <h1>Admin Panel - <a href="orders">orders</a></h1><br/>
+        <div id="msg" th:if="${message != null}">
+            <span th:text="${message}"></span>
+        </div>
         <div class="flex" th:if="${orders != null}">
             <table class="info_table">
                 <thead>
@@ -23,15 +27,12 @@
                     <tr th:each="takeaway:${orders}">
                         <td th:text="${takeaway.id}"></td>
                         <td th:text="${takeaway.getDay()+' '+takeaway.getTime()}"></td>
-                        <td th:text="${takeaway.client.tlf}"></td>
+                        <td th:text="${takeaway.login.tlf}"></td>
                         <td th:text="${takeaway.displayStatus()}"></td>
                         <td><a class="btn_edit">Edit</a><a class="btn_delete" th:href="@{'orders/delete/' + ${takeaway.id}}">Delete</a></td>
                     </tr>
                 </tbody>
             </table>
-            <div th:if="${message != null}">
-                <span class="msg" th:text="${message}"></span>
-            </div>
         </div>
     </div>
 </main>

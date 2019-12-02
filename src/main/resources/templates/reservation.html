@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld - Reservation</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header th:insert="index.html :: header"></header>
+<main>
+    <div class="margin-top-130-auto flex">
+        <div class="reservation_left" th:if="${reservationForm != null}">
+            <h1>Table Reservation</h1><br>
+            <h2><span th:text="${reservationForm.restaurant.address_street+', '+reservationForm.restaurant.address_town}"></span></h2>
+            <form th:action="@{'/reservation-confirm'}" th:object="${reservationForm}" method=POST>
+                Amount of guests:
+                <select th:field="${reservationForm.guests}" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+                <br>Date:
+                <input type="text" th:field="${reservationForm.order_for}" placeholder="2019-01-01 00:00" required/>
+                <input type="hidden" th:field="${reservationForm.restaurant.id}" required/>
+                <input class="submit_btn" type="submit" name="reserve" value="reserve" />
+            </form>
+        </div>
+        <div class="reservation_right" id="opening_hours">
+            <h1>Opening Hours:</h1><br>
+            <table class="reservation_info">
+                <tr>
+                    <td>Monday - Friday</td>
+                    <td th:text="${reservationForm.restaurant.workday_open+' - '+reservationForm.restaurant.workday_closed}"></td>
+                </tr>
+                <tr>
+                    <td>Saturday - Sunday</td>
+                    <td th:text="${reservationForm.restaurant.weekend_open+' - '+reservationForm.restaurant.weekend_closed}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div th:if="${restaurant == null}">
+        <h3>Nothing found sorry</h3>
+    </div>
+</main>
+</body>
+</html>

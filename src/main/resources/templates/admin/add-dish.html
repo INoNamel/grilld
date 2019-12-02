@@ -6,11 +6,12 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<header th:insert="index.html :: header"></header>
 <main>
-    <div class="margin_auto">
-        <h1>Admin Panel - add dish</a></h1><br/>
+    <div class="margin-top-130-auto">
+        <h1>Admin Panel - add dish</h1><br/>
         <form action="/admin/dishes/add-dish" th:if="${dishForm != null}" th:object="${dishForm}" method=POST>
-            <div class="flex flex_">
+            <div class="flex flex-evenly">
                 <div>
                     Name: <br/><input type="text" th:field="${dishForm.name}" placeholder="name" required/>
                 </div>
@@ -28,7 +29,7 @@
                 </div>
             </div>
             <div class="flex space-between">
-                <button type="submit" class="btn_edit">Add</button><a class="btn_bck" th:href="@{/admin/dishes}">Back</a>
+                <a class="btn_bck" th:href="@{/admin/dishes}">Back</a><button type="submit" class="btn_edit">Add</button>
             </div>
         </form>
     </div>

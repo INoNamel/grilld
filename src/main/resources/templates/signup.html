@@ -2,24 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Grilld - login</title>
+    <title>Grilld - sign up</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <header th:insert="index.html :: header"></header>
     <main>
         <div class="margin-top-130-auto">
-            <h1>Login</h1>
-            <form th:if="${session.logged == null}" th:action="@{/login}" th:object="${loginForm}" method=POST>
-                Tlf.: <input type="text" th:field="*{tlf_type}" placeholder="phone number" required/>
+            <h1>Sign up</h1>
+            <form th:if="${session.logged == null}" th:action="@{/signup}" th:object="${loginForm}" method=POST>
+                Name: <input type="text" th:field="*{name}" placeholder="name" required/>
+                Tlf.: <input type="tel" th:field="*{tlf_type}" pattern="[0-9]{6,10}" placeholder="66666666" required/>
                 Password: <input type="password" th:field="*{password}" placeholder="password" required/>
 
-                <input type="submit" class="btn_edit" value="Log in"/>
+                <input type="submit" class="btn_edit" value="sign up"/>
                 <div id="msg" th:if="${message != null}">
                     <p th:text="${message}"></p>
                 </div>
             </form>
-            <h1><a class="btn_log" th:if="${session.logged == true}" href="/logout">log out</a></h1>
         </div>
     </main>
 </body>

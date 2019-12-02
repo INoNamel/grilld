@@ -14,7 +14,7 @@ public class Reservation {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime order_for;
 
-    private Client client;
+    private Login login;
     private Restaurant restaurant;
 
     Reservation(){
@@ -53,12 +53,12 @@ public class Reservation {
         this.order_time = order_time;
     }
 
-    public Client getClient() {
-        return client;
+    public Login getLogin() {
+        return login;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setLogin(Login login) {
+        this.login = login;
     }
 
     public Restaurant getRestaurant() {
