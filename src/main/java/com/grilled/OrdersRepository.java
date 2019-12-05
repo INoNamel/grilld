@@ -28,17 +28,16 @@ public class OrdersRepository {
                     "INNER JOIN client_list ON order_takeaway.client_ref = client_list.tlf " +
                     "INNER JOIN restaurant_list ON order_takeaway.restaurant_ref = restaurant_list.id " +
                     "WHERE order_takeaway.restaurant_ref = "+restaurant+
-                    " ORDER BY order_id DESC");
+                    " ORDER BY ordered_on DESC");
             SqlRowSet rs = jdbc.queryForRowSet(query);
 
             List<Takeaway> takeawayList = new ArrayList<>();
 
             while (rs.next()) {
                 Takeaway takeaway = new Takeaway();
-                Login login = new Login();
-                login.setTlf_type(rs.getString("tlf"));
                 takeaway.setId(rs.getInt("order_id"));
-                takeaway.setLogin(login);
+                takeaway.setLogin(new Login());
+                takeaway.getLogin().setTlf_type(rs.getString("tlf"));
                 takeaway.setOrder_time(LocalDateTime.parse(rs.getString("ordered_on"), formatter));
                 takeaway.setStatus(rs.getInt("status"));
                 takeawayList.add(takeaway);
@@ -60,8 +59,8 @@ public class OrdersRepository {
     }
 
     List<Reservation> findAllReservations(int restaurant) {
-        try {
-            String query = ("SELECT order_table.id as order_id, ordered_on, guests_amount, ordered_for, tlf FROM order_takeaway "+
+        /*try {*/
+            String query = ("SELECT order_table.id as order_id, ordered_on, guests_amount, ordered_for, tlf FROM order_table "+
                     "INNER JOIN client_list ON order_table.client_ref = client_list.tlf " +
                     "INNER JOIN restaurant_list ON order_table.restaurant_ref = restaurant_list.id " +
                     "WHERE order_table.restaurant_ref = "+restaurant+
@@ -69,11 +68,21 @@ public class OrdersRepository {
             SqlRowSet rs = jdbc.queryForRowSet(query);
 
             List<Reservation> reservationList = new ArrayList<>();
+            while (rs.next()) {
+                Reservation reservation = new Reservation();
+                reservation.setId(rs.getInt("order_id"));
+                reservation.setLogin(new Login());
+                reservation.getLogin().setTlf_type(rs.getString("tlf"));
+                reservation.setOrder_time(LocalDateTime.parse(rs.getString("ordered_on"), formatter));
+                reservation.setOrder_for(LocalDateTime.parse(rs.getString("ordered_for"), formatter));
+                reservation.setGuests(rs.getInt("guests_amount"));
+                reservationList.add(reservation);
+            }
 
             return reservationList;
-        } catch (Exception e) {
+        /*} catch (Exception e) {
             return null;
-        }
+        }*/
 
 
     }

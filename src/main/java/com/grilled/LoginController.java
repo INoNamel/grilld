@@ -48,7 +48,7 @@ public class LoginController {
             if(login.getTlf_type().equals("admin")) {
                 return "redirect:/admin/dishes";
             } else if(login.getTlf_type().equals("employee")){
-                return "redirect:/admin/take-aways";
+                return "redirect:/admin/takeaways";
             } else {
                 return "redirect:/";
             }

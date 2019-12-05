@@ -2,31 +2,33 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Grilld Admin - all orders</title>
+    <title>Grilld Admin - all reservations</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <header th:insert="index.html :: header"></header>
 <main>
     <div class="margin-top-130-auto">
-        <h1>Admin Panel - <a href="orders">orders</a></h1><br/>
-        <div id="msg" th:if="${message != null}">
-            <span th:text="${message}"></span>
-        </div>
-        <div class="flex" th:if="${orders != null}">
+        <h1>Admin Panel - <a href="takeaways">take-aways</a> | <a href="reservations">[reservations]</a></h1><br/>
+        <span id="msg" th:if="${message != null}" th:text="${message}"></span>
+        <div class="flex" th:if="${reservations != null}">
             <table class="info_table">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Date Time</th>
+                        <th scope="col">Order on</th>
+                        <th scope="col">Order for</th>
                         <th scope="col">Client tlf.</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Guests</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="reservation:${reservations}">
-                        <td th:text="${takeaway.id}"></td>
-                        <td th:text="${reservation.login.tlf}"></td>
+                        <td th:text="${reservation.id}"></td>
+                        <td th:text="${reservation.order_time}"></td>
+                        <td th:text="${reservation.order_for}"></td>
+                        <td th:text="${reservation.login.tlf_type}"></td>
+                        <td th:text="${reservation.guests}"></td>
                         <td><a class="btn_edit">Edit</a><a class="btn_delete" th:href="@{'reservations/delete/' + ${reservation.id}}">Delete</a></td>
                     </tr>
                 </tbody>
