@@ -11,14 +11,14 @@
     <div id="nav_menu">
         <h2><a href="/">Menu</a> - <a href="/reservation">Reserve Table</a> - <a href="/take-away">Take Away</a>
         <a th:if="${session.auth_type == 'admin'}" href="/admin/dishes"> - Admin</a>
-        <a th:if="${session.auth_type == 'employee'}" href="/admin/take-aways"> - Admin</a>
+        <a th:if="${session.auth_type == 'employee'}" href="/admin/takeaways"> - Admin</a>
         </h2>
     </div>
     <div id="login">
         <h1 th:if="${session.logged == null}"><a href="/signup" >Sign up</a> | <a href="/login">Log in</a></h1>
         <h1 th:if="${session.logged == true}">
             <span th:text="${session.auth_name}"></span>
-            <a class="btn_edit" href="/">profile</a>
+            <a th:if="${session.auth_type != 'admin' OR session.auth_type != 'employee'}" class="btn_edit" href="/">profile</a>
             <a class="btn_log" href="/logout">log out</a>
         </h1>
     </div>

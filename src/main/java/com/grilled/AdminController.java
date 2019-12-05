@@ -82,7 +82,7 @@ public class AdminController {
                         model.addAttribute(directory, ordersRepo.findAllReservations(1));
                         return "admin/show-reservations";
                     }
-                case ("take-aways"):
+                case ("takeaways"):
                     if(session.getAttribute("auth_type").equals("employee")) {
                         model.addAttribute(directory, ordersRepo.findAllTakeaways(1));
                         return "admin/show-takeaways";
