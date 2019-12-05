@@ -16,6 +16,10 @@ public class Takeaway {
 
     private Login login;
     private Restaurant restaurant;
+    private static final String UNDER_REVIEW_MESSAGE = "under review";
+    private static final String COOCKING_MESSAGE = "cooking";
+    private static final String READY_FOR_PICK_UP_MESSAGE = "ready for pickup";
+    private static final String COMPLETED_MESSAGE = "completed";
 
 
     public int getId() {
@@ -70,18 +74,18 @@ public class Takeaway {
         String status_ref = "";
         switch (status) {
             case (0):
-                status_ref = "under review";
+                status_ref = UNDER_REVIEW_MESSAGE;
                 break;
             case (1):
-                status_ref = "cooking";
+                status_ref = COOCKING_MESSAGE;
                 break;
 
             case (2):
-                status_ref = "ready for pickup";
+                status_ref = READY_FOR_PICK_UP_MESSAGE;
                 break;
 
             case (3):
-                status_ref = "completed";
+                status_ref = COMPLETED_MESSAGE;
                 break;
         }
         return status_ref;
