@@ -6,13 +6,60 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<script type="text/javascript">
+            var dishes = [];
+
+            function chooseDish(id) {
+                if (!document.getElementById(id).className.match("choose_dish")) {
+                    document.getElementById(id).classList.toggle('choose_dish');
+                    document.getElementById('list'+id).addEventListener("click", (event) => {event.stopPropagation();});
+                    document.getElementById('list'+id).hidden = false;
+                    document.getElementById('list'+id).disabled = false;
+
+                    addDish(id);
+                } else {
+                    var pos = dishes.indexOf(id);
+                    dishes.splice(pos, 1);
+                    document.getElementById(id).classList.remove('choose_dish');
+                    document.getElementById('list'+id).hidden = true;
+                    document.getElementById('list'+id).disabled = true;
+                }
+                console.log(dishes);
+            }
+
+            function addDish(id) {
+                dishes.push(id);
+            }
+
+</script>
 <header th:insert="index.html :: header"></header>
 <main>
     <div class="margin-top-130-auto">
-        <h1>Take Away menu</h1>
-        <form action="/takeaway-confirm" th:if="${takeawayForm != null}" th:object="${takeawayForm}" method=POST>
-
-        </form>
+        <div th:if="${takeawayOrder != null && dishes != null && restaurants != null}">
+            <form action="/takeaway-confirm" th:object="${takeawayOrder}" method=POST>
+                <h1>Take Away menu</h1>
+                <select th:field="${takeawayOrder.restaurant.id}" required>
+                    <option th:each="restaurant:${restaurants}" th:value="${restaurant.id}" th:text="${restaurant.address_street+', '+restaurant.address_town}"></option>
+                </select>
+                <div id="takeaway_menu">
+                    <div class="takeaway-item" th:each="dish : ${dishes}" onclick = "chooseDish(this.id)" th:id="${dish.id}" >
+                        <h2><span th:text="${dish.name}"></span></h2>
+                        <p th:text="${dish.meal.type} ?: '-'"></p>
+                        <div class="takeaway-quantity flex flex-between">
+                            <span th:text="${dish.price+' dkk'}"></span>
+                            <select th:field="*{list[__${dish.id}__]}" disabled hidden>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input class="btn_edit" type="submit" value="PLACE ORDER" name="submit" />
+            </form>
+        </div>
     </div>
 </main>
 </body>

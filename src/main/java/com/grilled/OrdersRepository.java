@@ -2,13 +2,18 @@ package com.grilled;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class OrdersRepository {
@@ -50,9 +55,6 @@ public class OrdersRepository {
 
     void updateTakeaway(Takeaway takeaway) {
         jdbc.update("UPDATE order_takeaway SET " +
-                "ordered_on='" + takeaway.getOrder_time() + "', " +
-                "restaurant_ref='" + takeaway.getRestaurant().getId() + "', " +
-                "client_ref=" + takeaway.getLogin().getTlf_type() + ", " +
                 "status=" + takeaway.getStatus() + ", " +
                 "WHERE id = " + takeaway.getId()+ " ");
     }
@@ -94,6 +96,23 @@ public class OrdersRepository {
                 "INSERT INTO order_table (restaurant_ref, guests_amount, ordered_for, client_ref) VALUES (?, ?, ?, ?)",
                 reservation.getRestaurant().getId(), reservation.getGuests(), reservation.getOrder_for(), reservation.getLogin().getTlf_type()
         );
+    }
 
+    void addTakeaway(Takeaway takeaway) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbc.update(connection -> {PreparedStatement ps = connection.prepareStatement("INSERT INTO order_takeaway (restaurant_ref, client_ref) VALUES (?, ?) ",
+            Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, takeaway.getRestaurant().getId());
+            ps.setString(2, takeaway.getLogin().getTlf_type());
+            return ps;
+        }, keyHolder);
+
+        jdbc.batchUpdate("INSERT INTO order_takeaway_list (takeaway_ref, dish_ref) VALUES (?, ?) ",
+            takeaway.getOrder(), 10, (ps, dish) -> {
+            ps.setInt(1, Objects.requireNonNull(keyHolder.getKey()).intValue());
+            ps.setInt(2, dish.getId());
+        });
     }
 }
+

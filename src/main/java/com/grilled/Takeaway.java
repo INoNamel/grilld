@@ -2,14 +2,14 @@ package com.grilled;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDateTime;
 
 public class Takeaway {
     private DateTimeFormatter day = DateTimeFormatter.ofPattern("MMMM d EEEE"), time = DateTimeFormatter.ofPattern("HH:mm");
 
     private int id, status = 0;
-    private ArrayList<Dish> orders;
+    private List<Dish> orders;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime order_time;
@@ -34,11 +34,11 @@ public class Takeaway {
         this.status = status;
     }
 
-    public ArrayList<Dish> getOrder() {
+    public List<Dish> getOrder() {
         return orders;
     }
 
-    public void setOrder(ArrayList<Dish> order) {
+    public void setOrder(List<Dish> order) {
         this.orders = order;
     }
 

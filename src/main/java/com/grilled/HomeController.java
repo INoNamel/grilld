@@ -14,6 +14,11 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.ArrayList;
+
 @Controller
 public class HomeController {
 
@@ -102,16 +107,42 @@ public class HomeController {
 
     @GetMapping("/take-away")
     public String takeaway(Model model) {
-        model.addAttribute("takeawayForm", new Takeaway());
+        model.addAttribute("restaurants", menuRepo.findAllRestaurants());
+        model.addAttribute("dishes", menuRepo.findAllDishes(true, null));
+
+        TakeawayOrder takeawayOrder = new TakeawayOrder();
+        takeawayOrder.setList(new HashMap<>());
+        takeawayOrder.setRestaurant(new Restaurant());
+        for(Dish dish: menuRepo.findAllDishes(true, null)) {
+            takeawayOrder.getList().put(dish.getId(), null);
+        }
+        model.addAttribute("takeawayOrder", takeawayOrder);
+
         return "take-away";
     }
 
     @PostMapping("/takeaway-confirm")
-    public String takeaway_confirm(@ModelAttribute Takeaway takeaway, BindingResult result, RedirectAttributes ra) {
+    public String takeaway_confirm(@ModelAttribute TakeawayOrder takeawayOrder, BindingResult result, RedirectAttributes ra) {
         if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
-            //TODO Take-Away
+            if (result.hasErrors()) {
+                ra.addFlashAttribute("message", "request denied, check input");
+            } else {
+                Takeaway takeaway = new Takeaway();
+                takeaway.setRestaurant(takeawayOrder.getRestaurant());
+                takeaway.setOrder(new ArrayList<>());
+                takeaway.setLogin(new Login());
+                takeaway.getLogin().setTlf_type(session.getAttribute("auth_type").toString());
 
-            ra.addFlashAttribute("message", "take-away accepted");
+                for (Entry<Integer, Integer> entry : takeawayOrder.getList().entrySet()) {
+                    for(int i = 0; i<entry.getValue(); i++) {
+                        Dish dish = new Dish();
+                        dish.setId(entry.getKey());
+                        takeaway.getOrder().add(dish);
+                    }
+                }
+                ordersRepo.addTakeaway(takeaway);
+                ra.addFlashAttribute("message", "take-away accepted");
+            }
             return "redirect:/take-away";
         } else {
             ra.addFlashAttribute("message", "log in before reserving");
