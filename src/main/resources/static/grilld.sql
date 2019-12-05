@@ -120,7 +120,7 @@ INSERT INTO `order_takeaway` (`id`, `ordered_on`, `restaurant_ref`, `client_ref`
 
 CREATE TABLE `order_takeaway_list` (
   `row_id` int(10) UNSIGNED NOT NULL,
-  `invoice_ref` int(10) UNSIGNED DEFAULT NULL,
+  `takeaway_ref` int(10) UNSIGNED DEFAULT NULL,
   `dish_ref` int(10) UNSIGNED DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
@@ -128,7 +128,7 @@ CREATE TABLE `order_takeaway_list` (
 -- Dumping data for table `order_takeaway_list`
 --
 
-INSERT INTO `order_takeaway_list` (`row_id`, `invoice_ref`, `dish_ref`) VALUES
+INSERT INTO `order_takeaway_list` (`row_id`, `takeaway_ref`, `dish_ref`) VALUES
 (1, 1, 1),
 (2, 1, 1),
 (3, 1, 2);
