@@ -191,6 +191,9 @@ public class AdminController {
                 case ("dishes"):
                     menuRepo.findDish(id);
                     return "admin/edit-dish";
+                case ("restaurants"):
+                    menuRepo.findRestaurant(null, id);
+                    return "admin/edit-dish";
                 case ("reservations"):
                     //TODO edit reservations?
 

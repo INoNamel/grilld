@@ -73,7 +73,7 @@ public class HomeController {
 
     @GetMapping("/reservation/{restaurant}")
     public String reservation(@PathVariable(name = "restaurant") String restaurant_town, Model model) {
-        Restaurant restaurant = menuRepo.findRestaurant(restaurant_town.toLowerCase());
+        Restaurant restaurant = menuRepo.findRestaurant(restaurant_town.toLowerCase(), 0);
         if(restaurant != null && restaurant.getId()>0){
             Reservation reservation = new Reservation();
             reservation.setLogin(new Login());

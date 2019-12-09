@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.Null;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalTime;
@@ -160,12 +161,24 @@ public class MenuRepository {
         }
     }
 
-    Restaurant findRestaurant(String restaurant_town) {
+    Restaurant findRestaurant(@Null String restaurant_town, int id) {
         try {
+
+            String town_name = "";
+            if(restaurant_town != null) {
+                town_name = " WHERE LOWER(address_town) = '"+restaurant_town+"' ";
+            }
+
+            String restaurant_id = "";
+            if(id > 0) {
+                restaurant_id = " WHERE id = "+ id +" ";
+            }
+
+
             String query = ("SELECT id, guests_max, address_town, address_street, workday_open, workday_closed, weekend_open, weekend_closed " +
                     "FROM restaurant_list " +
                     "INNER JOIN restaurant_time on restaurant_list.id = restaurant_time.restaurant_ref " +
-                    "WHERE LOWER(address_town) LIKE '%"+restaurant_town+"%' ");
+                    town_name + restaurant_id + " ");
             SqlRowSet rs = jdbc.queryForRowSet(query);
 
             Restaurant restaurant = new Restaurant();

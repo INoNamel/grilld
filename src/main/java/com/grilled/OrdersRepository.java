@@ -232,7 +232,7 @@ public class OrdersRepository {
         }, keyHolder);
 
         jdbc.batchUpdate("INSERT INTO order_takeaway_list (takeaway_ref, dish_ref) VALUES (?, ?) ",
-            takeaway.getOrder(), 10, (ps, dish) -> {
+            takeaway.getOrder(), 30, (ps, dish) -> {
             ps.setInt(1, Objects.requireNonNull(keyHolder.getKey()).intValue());
             ps.setInt(2, dish.getId());
         });
