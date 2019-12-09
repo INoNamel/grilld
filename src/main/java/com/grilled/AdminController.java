@@ -79,6 +79,11 @@ public class AdminController {
                         model.addAttribute(directory, employeesRepo.findAllEmployees());
                         return "admin/show-employees";
                     }
+                case ("restaurants"):
+                    if(session.getAttribute("auth_type").equals("admin")) {
+                        model.addAttribute(directory, menuRepo.findAllRestaurants());
+                        return "admin/show-restaurants";
+                    }
                 case ("reservations"):
                     if(session.getAttribute("auth_type").equals("employee")) {
                         model.addAttribute(directory, ordersRepo.findAllReservations(null,null));
@@ -111,6 +116,9 @@ public class AdminController {
                 case ("reservations"):
                     ordersRepo.deleteReservation(id);
                     return "redirect:/admin/reservations";
+                case ("restaurants"):
+                    menuRepo.deleteRestaurant(id);
+                    return "redirect:/admin/restaurants";
                 default:
                     return "error/404";
             }
@@ -154,6 +162,22 @@ public class AdminController {
                 ra.addFlashAttribute("message", "new dish added");
                 menuRepo.addDish(dish);
                 return "redirect:/admin/dishes";
+            }
+        } else {
+            return "error/403";
+        }
+    }
+
+    @PostMapping("/admin/restaurants/add-restaurant")
+    public String addRestaurant(@ModelAttribute Restaurant restaurant, BindingResult result, RedirectAttributes ra) {
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && session.getAttribute("auth_type").equals("admin")) {
+            if (result.hasErrors()) {
+                ra.addFlashAttribute("message", "check input format");
+                return "redirect:/admin/restaurants/add";
+            } else {
+                ra.addFlashAttribute("message", "new restaurant added");
+                menuRepo.addRestaurant(restaurant);
+                return "redirect:/admin/restaurants";
             }
         } else {
             return "error/403";

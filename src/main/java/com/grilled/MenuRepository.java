@@ -2,13 +2,18 @@ package com.grilled;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Repository
 public class MenuRepository {
@@ -179,5 +184,26 @@ public class MenuRepository {
         }  catch (Exception e) {
             return null;
         }
+    }
+
+    void addRestaurant(Restaurant restaurant) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO restaurant_list (address_town, address_street, guests_max) VALUES (?, ?, ?) ",
+                    Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, restaurant.getAddress_town());
+            ps.setString(2, restaurant.getAddress_street());
+            ps.setInt(3, restaurant.getGuests_max());
+            return ps;
+        }, keyHolder);
+
+        jdbc.update("INSERT INTO restaurant_time (restaurant_ref, workday_open, workday_closed, weekend_open, weekend_closed) " +
+                "VALUES (?, ?, ?, ?, ?) ",
+                keyHolder.getKey(), restaurant.getWorkday_open(), restaurant.getWorkday_closed(), restaurant.getWeekend_open(), restaurant.getWeekend_closed()
+            );
+    }
+
+    void deleteRestaurant(int id) {
+        jdbc.update("DELETE FROM restaurant_list WHERE id = " +id +" ");
     }
 }

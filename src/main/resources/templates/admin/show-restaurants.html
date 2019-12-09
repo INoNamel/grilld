@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld Admin - all restaurants</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header th:insert="index.html :: header"></header>
+<main>
+    <div class="margin-top-130-auto">
+        <h1>Admin Panel - <a href="dishes">dishes</a> | <a href="clients">clients</a> | <a href="employees">employees</a> | <a href="restaurants">[restaurants]</a></h1><br/>
+        <a class="btn_add" href="restaurants/add">Add</a>
+        <span id="msg" th:if="${message != null}" th:text="${message}"></span>
+        <div class="flex" th:if="${restaurants != null}">
+            <table class="info_table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">town</th>
+                        <th scope="col">street</th>
+                        <th scope="col">max guests</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="restaurant:${restaurants}">
+                        <td th:text="${restaurant.id}"></td>
+                        <td th:text="${restaurant.address_town}"></td>
+                        <td th:text="${restaurant.address_street}"></td>
+                        <td th:text="${restaurant.guests_max}"></td>
+                        <td><a class="btn_edit" th:href="@{'restaurants/edit/' + ${restaurant.id}}">Edit</a><a class="btn_delete" th:href="@{'restaurants/delete/' + ${restaurant.id}}">Delete</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>
