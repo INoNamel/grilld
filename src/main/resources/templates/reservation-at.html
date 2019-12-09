@@ -11,14 +11,12 @@
     <div id="restaurants" class="margin-top-130-auto">
         <h1>Restaurants</h1>
         <div class="flex flex-evenly" th:if="${restaurants != null and !restaurants.isEmpty()}">
-        <div class="restaurant" th:each="restaurant:${restaurants}">
-            <a th:href="@{'/reservation/'+${restaurant.address_town.toLowerCase()}}">
-                <div>
+            <a th:each="restaurant:${restaurants}" th:href="@{'/reservation/'+${restaurant.address_town.toLowerCase()}}">
+                <div class="restaurant" >
                     <h2><span th:text="${restaurant.address_town}"></span></h2>
                     <h3><span th:text="${restaurant.address_street}"></span></h3>
                 </div>
             </a>
-        </div>
         </div>
     </div>
     <div th:if="${restaurants == null or restaurants.isEmpty()}">

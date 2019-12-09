@@ -1,6 +1,5 @@
-USE grilld;
-
-
+CREATE schema `grilld`;
+Use grilld;
 CREATE TABLE `client_list` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(50) COLLATE latin1_bin NOT NULL,
@@ -13,8 +12,10 @@ CREATE TABLE `client_list` (
 --
 
 INSERT INTO `client_list` (`id`, `name`, `tlf`, `drowssap`) VALUES
-(1, 'Valera', '63871233', 'ad74894b94eecd65d1b86061b83f84d74f414a82a7c2463a069cba75fdae7d36'),
-(2, 'Ivan', '23412455', '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5');
+(1, 'Valera', '63871233', '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5'),
+(2, 'Ivan', '23412455', '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5'),
+(3, 'vasya', '22222222', '65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5'),
+(4, 'ahmed', '66666666', '9af2921d3fd57fe886c9022d1fcc055d53a79e4032fa6137e397583884e1a5de');
 
 -- --------------------------------------------------------
 
@@ -39,7 +40,7 @@ INSERT INTO `dish_list` (`id`, `name`, `meal_ref`, `description`, `price`, `avai
 (1, 'vafli', 1, 'as das dqw dasd qwd asd ', 22, 1),
 (2, 'pon4iki', 2, 'qw qd qw dq12313 1 3213 1as dasd ', 65, 1),
 (3, 'Kruasani', 4, 'dqwwdasdasd asd asd qwe123 asd 12dasqwd a', 16, 1),
-(4, 'omaewa mo', 4, 'shindeiru', 33, 1),
+(4, 'omaewa mo', 4, 'shindeiru', 33, 0),
 (6, 'dasd qw 123 12', 5, '132 asd as dawe qw', 15, 1),
 (7, '55123123', 3, 'asdas', 123213, 1);
 
@@ -88,8 +89,8 @@ CREATE TABLE `order_table` (
 --
 
 INSERT INTO `order_table` (`id`, `ordered_on`, `restaurant_ref`, `guests_amount`, `ordered_for`, `client_ref`) VALUES
-(1, '2019-11-27 18:16:25', 1, '2', '2019-12-17 15:20:00', '63871233'),
-(2, '2019-11-27 18:16:25', 1, '3', '2019-12-17 15:20:00', '63871233');
+(1, '2019-11-27 18:16:25', 1, '2', '2019-12-27 12:13:00', '63871233'),
+(2, '2019-11-23 18:16:25', 1, '3', '2019-12-17 15:20:00', '63871233');
 
 -- --------------------------------------------------------
 
@@ -99,10 +100,10 @@ INSERT INTO `order_table` (`id`, `ordered_on`, `restaurant_ref`, `guests_amount`
 
 CREATE TABLE `order_takeaway` (
   `id` int(10) UNSIGNED NOT NULL,
-  `ordered_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ordered_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `restaurant_ref` tinyint(3) UNSIGNED DEFAULT NULL,
   `client_ref` varchar(10) COLLATE latin1_bin DEFAULT NULL,
-  `status` set('0','1','2','3') COLLATE latin1_bin NOT NULL DEFAULT '0'
+  `status` enum('0','1','2','3') COLLATE latin1_bin NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 --
@@ -110,7 +111,12 @@ CREATE TABLE `order_takeaway` (
 --
 
 INSERT INTO `order_takeaway` (`id`, `ordered_on`, `restaurant_ref`, `client_ref`, `status`) VALUES
-(1, '2019-12-01 23:23:01', 1, '63871233', '3');
+(1, '2019-12-02 00:23:01', 1, '63871233', '3'),
+(4, '2019-12-08 21:46:02', 2, '22222222', '1'),
+(5, '2019-12-08 21:46:03', 2, '22222222', '2'),
+(6, '2019-12-09 01:37:28', 2, '63871233', '0'),
+(7, '2019-12-09 02:20:11', 1, '63871233', '3'),
+(8, '2019-12-09 02:21:11', 1, '63871233', '2');
 
 -- --------------------------------------------------------
 
@@ -131,7 +137,25 @@ CREATE TABLE `order_takeaway_list` (
 INSERT INTO `order_takeaway_list` (`row_id`, `takeaway_ref`, `dish_ref`) VALUES
 (1, 1, 1),
 (2, 1, 1),
-(3, 1, 2);
+(3, 1, 2),
+(4, 4, 3),
+(5, 4, 3),
+(6, 4, 3),
+(7, 4, 4),
+(8, 4, 4),
+(9, 4, 4),
+(10, 4, 4),
+(11, 4, 4),
+(12, 5, 4),
+(13, 6, 4),
+(14, 6, 4),
+(15, 6, 4),
+(16, 6, 6),
+(17, 7, 1),
+(18, 7, 1),
+(19, 7, 1),
+(20, 7, 1),
+(21, 8, 6);
 
 -- --------------------------------------------------------
 
@@ -241,8 +265,8 @@ ALTER TABLE `order_takeaway`
 --
 ALTER TABLE `order_takeaway_list`
   ADD PRIMARY KEY (`row_id`),
-  ADD KEY `invoice_id` (`invoice_ref`),
-  ADD KEY `dish_id` (`dish_ref`);
+  ADD KEY `dish_id` (`dish_ref`),
+  ADD KEY `order_takeaway_list_ibfk_1` (`takeaway_ref`);
 
 --
 -- Indexes for table `restaurant_list`
@@ -289,19 +313,19 @@ ALTER TABLE `meal_type`
 -- AUTO_INCREMENT for table `order_table`
 --
 ALTER TABLE `order_table`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `order_takeaway`
 --
 ALTER TABLE `order_takeaway`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `order_takeaway_list`
 --
 ALTER TABLE `order_takeaway_list`
-  MODIFY `row_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `row_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `restaurant_list`
@@ -337,7 +361,7 @@ ALTER TABLE `order_takeaway`
 -- Constraints for table `order_takeaway_list`
 --
 ALTER TABLE `order_takeaway_list`
-  ADD CONSTRAINT `order_takeaway_list_ibfk_1` FOREIGN KEY (`invoice_ref`) REFERENCES `order_takeaway` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `order_takeaway_list_ibfk_1` FOREIGN KEY (`takeaway_ref`) REFERENCES `order_takeaway` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `order_takeaway_list_ibfk_2` FOREIGN KEY (`dish_ref`) REFERENCES `dish_list` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --

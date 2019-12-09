@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld - my orders</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header th:insert="index.html :: header"></header>
+<main>
+    <div class="margin-top-130-auto flex">
+        <div>
+            <h1>Reservations</h1>
+            <table class="info_table">
+                <thead>
+                <tr>
+                    <th scope="col">Restaurant</th>
+                    <th scope="col">Order for</th>
+                    <th scope="col">Guests</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reservation:${reservations}">
+                    <td th:text="${reservation.restaurant.address_town}"></td>
+                    <td th:text="${reservation.getOrder_forTime()+' – '+reservation.getOrder_forDay()}"></td>
+                    <td th:text="${reservation.guests}"></td>
+                    <td>
+                        <a class="btn_edit" href="">Edit</a>
+                        <a class="btn_delete" th:href="@{'my-orders/reservations/delete/' + ${reservation.id}}">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h1>Take-aways</h1>
+            <table class="info_table">
+                <thead>
+                <tr>
+                    <th scope="col">Restaurant</th>
+                    <th scope="col">When</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="takeaway:${takeaways}">
+                    <td th:text="${takeaway.restaurant.address_town}"></td>
+                    <td th:text="${takeaway.getTime()+' – '+takeaway.getDay()}"></td>
+                    <td th:switch="${takeaway.status}">
+                        <span style="color: steelblue" th:case="0">under review</span>
+                        <span style="color: #d7c21b" th:case="1">cooking</span>
+                        <span style="color: green" th:case="2">ready for pickup</span>
+                        <span style="color: darkviolet" th:case="3">completed</span>
+                    </td>
+                    <td>
+                        <a th:if="${takeaway.status == 0}" class="btn_delete" th:href="@{'my-orders/takeaways/delete/' + ${takeaway.id}}">Cancel</a>
+                        <a class="btn_edit" th:href="@{'my-orders/takeaways/view/' + ${takeaway.id}}">View</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -11,6 +11,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.time.DateTimeException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class AdminController {
@@ -35,22 +37,22 @@ public class AdminController {
 
     @ExceptionHandler({DataIntegrityViolationException.class})
     public String handleMysqlDataTruncation(DataIntegrityViolationException ex) {
-        return "error/405";
+        return "error/500";
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
     public String handleIllegalArgumentException(IllegalArgumentException ex) {
-        return "error/405";
+        return "error/500";
     }
 
     @ExceptionHandler({NumberFormatException.class})
     public String handleTypeMismatch(NumberFormatException ex) {
-        return "error/405";
+        return "error/500";
     }
 
     @ExceptionHandler({DateTimeException.class})
     public String handleDateTimeException(DateTimeException ex) {
-        return "error/405";
+        return "error/500";
     }
 
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
@@ -79,12 +81,12 @@ public class AdminController {
                     }
                 case ("reservations"):
                     if(session.getAttribute("auth_type").equals("employee")) {
-                        model.addAttribute(directory, ordersRepo.findAllReservations(1));
+                        model.addAttribute(directory, ordersRepo.findAllReservations(null,null));
                         return "admin/show-reservations";
                     }
                 case ("takeaways"):
                     if(session.getAttribute("auth_type").equals("employee")) {
-                        model.addAttribute(directory, ordersRepo.findAllTakeaways(1));
+                        model.addAttribute(directory, ordersRepo.findAllTakeaways(null, null));
                         return "admin/show-takeaways";
                     }
                 default:
@@ -96,22 +98,19 @@ public class AdminController {
     }
 
     @GetMapping("/admin/{directory}/delete/{id}")
-    public String deleteThis(@PathVariable(name = "directory") String directory, @PathVariable(name = "id") String id, RedirectAttributes ra){
+    public String deleteThis(@PathVariable(name = "directory") String directory, @PathVariable(name = "id") int id, RedirectAttributes ra){
         if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
             ra.addFlashAttribute("message", "#"+id+" deleted");
             switch (directory) {
                 case ("dishes"):
-                    menuRepo.deleteDish(Integer.parseInt(id));
+                    menuRepo.deleteDish(id);
                     return "redirect:/admin/dishes";
                 case ("clients"):
-                    clientsRepo.deleteClient(Integer.parseInt(id));
+                    clientsRepo.deleteClient(id);
                     return "redirect:/admin/clients";
                 case ("reservations"):
-                    ordersRepo.deleteReservation(Integer.parseInt(id));
+                    ordersRepo.deleteReservation(id);
                     return "redirect:/admin/reservations";
-                case ("take-aways"):
-                    ordersRepo.deleteTakeaway(Integer.parseInt(id));
-                    return "redirect:/admin/take-aways";
                 default:
                     return "error/404";
             }
@@ -156,6 +155,53 @@ public class AdminController {
                 menuRepo.addDish(dish);
                 return "redirect:/admin/dishes";
             }
+        } else {
+            return "error/403";
+        }
+    }
+
+    @GetMapping("/admin/{directory}/edit/{id}")
+    public String updateThis(@PathVariable(name = "directory") String directory, @PathVariable(name = "id") int id, Model model){
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
+            switch (directory) {
+                case ("dishes"):
+                    menuRepo.findDish(id);
+                    return "admin/edit-dish";
+                case ("reservations"):
+                    //TODO edit reservations?
+
+                    return "admin/edit-reservation";
+                case ("takeaways"):
+                    Takeaway takeaway = ordersRepo.findTakeaway(id, null);
+                    takeaway.setOrder(ordersRepo.findTakeawayOrders(takeaway));
+
+                    Map<Integer, String> status_list = new HashMap<>();
+                    status_list.put(0, "under review");
+                    status_list.put(1, "cooking");
+                    status_list.put(2, "ready for pickup");
+                    status_list.put(3, "completed");
+
+                    model.addAttribute("status_list", status_list);
+                    model.addAttribute("takeawayForm", takeaway);
+                    return "admin/edit-takeaway";
+                default:
+                    return "error/404";
+            }
+        } else {
+            return "error/403";
+        }
+    }
+
+    @PostMapping("/admin/{directory}/update-takeaway")
+    public String updateTakeaway(@ModelAttribute Takeaway takeaway, BindingResult result, RedirectAttributes ra) {
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && session.getAttribute("auth_type").equals("employee")) {
+            if (result.hasErrors()) {
+                ra.addFlashAttribute("message", "check input format");
+            } else {
+                ra.addFlashAttribute("message", "takeaway status updated");
+                ordersRepo.updateTakeaway(takeaway);
+            }
+            return "redirect:/admin/takeaways";
         } else {
             return "error/403";
         }

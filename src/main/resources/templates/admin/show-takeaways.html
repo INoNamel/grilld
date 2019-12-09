@@ -26,8 +26,13 @@
                         <td th:text="${takeaway.id}"></td>
                         <td th:text="${takeaway.getTime()}"></td>
                         <td th:text="${takeaway.login.tlf_type}"></td>
-                        <td th:text="${takeaway.displayStatus()}"></td>
-                        <td><a class="btn_edit" href="">Edit</a></td>
+                        <td th:switch="${takeaway.status}">
+                            <span style="color: steelblue" th:case="0">under review</span>
+                            <span style="color: #d7c21b" th:case="1">cooking</span>
+                            <span style="color: green" th:case="2">ready for pickup</span>
+                            <span style="color: darkviolet" th:case="3">completed</span>
+                        </td>
+                        <td><a class="btn_edit" th:href="@{'takeaways/edit/' + ${takeaway.id}}">View</a></td>
                     </tr>
                 </tbody>
             </table>

@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.ArrayList;
 
@@ -37,22 +36,22 @@ public class HomeController {
 
     @ExceptionHandler({DataIntegrityViolationException.class})
     public String handleMysqlDataTruncation(DataIntegrityViolationException ex) {
-        return "error/405";
+        return "error/500";
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
     public String handleIllegalArgumentException(IllegalArgumentException ex) {
-        return "error/405";
+        return "error/500";
     }
 
     @ExceptionHandler({NumberFormatException.class})
     public String handleTypeMismatch(NumberFormatException ex) {
-        return "error/405";
+        return "error/500";
     }
 
     @ExceptionHandler({DateTimeException.class})
     public String handleDateTimeException(DateTimeException ex) {
-        return "error/405";
+        return "error/500";
     }
 
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
@@ -147,6 +146,47 @@ public class HomeController {
         } else {
             ra.addFlashAttribute("message", "log in before reserving");
             return "redirect:/login";
+        }
+    }
+
+    @GetMapping("/my-orders")
+    public String profile(Model model){
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
+            Login login = new Login();
+            login.setTlf_type(session.getAttribute("auth_type").toString());
+            model.addAttribute("reservations", ordersRepo.findAllReservations(null, login));
+            model.addAttribute("takeaways", ordersRepo.findAllTakeaways(null, login));
+
+            return "my-orders/all-orders";
+        } else {
+            return "error/403";
+        }
+    }
+
+    @GetMapping("/my-orders/{directory}/view/{id}")
+    public String viewOrder(@PathVariable(name = "directory") String directory, @PathVariable(name = "id") int id, Model model){
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
+
+            Login login = new Login();
+
+            switch (directory) {
+                case ("takeaways"):
+                    login.setTlf_type(String.valueOf(session.getAttribute("auth_type").toString()));
+                    Takeaway takeaway = ordersRepo.findTakeaway(id, login);
+                    takeaway.setOrder(ordersRepo.findTakeawayOrders(takeaway));
+
+                    model.addAttribute("takeaway", takeaway);
+                    return "my-orders/my-takeaway";
+                case ("reservations"):
+                    login.setTlf_type(String.valueOf(session.getAttribute("auth_type").toString()));
+                    //TODO view my reservation
+                    model.addAttribute("reservation", ordersRepo.findReservation(id, login));
+                    return "my-orders/my-reservation";
+                default:
+                    return "error/404";
+            }
+        } else {
+            return "error/403";
         }
     }
 

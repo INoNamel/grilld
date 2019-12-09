@@ -6,7 +6,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 public class Takeaway {
-    private DateTimeFormatter day = DateTimeFormatter.ofPattern("MMMM d EEEE"), time = DateTimeFormatter.ofPattern("HH:mm");
+    private DateTimeFormatter day = DateTimeFormatter.ofPattern("MMMM d"), time = DateTimeFormatter.ofPattern("HH:mm");
 
     private int id, status = 0;
     private List<Dish> orders;
@@ -64,27 +64,6 @@ public class Takeaway {
 
     public String getTime() {
         return this.order_time.format(time);
-    }
-
-    public String displayStatus() {
-        String status_ref = "";
-        switch (status) {
-            case (0):
-                status_ref = "under review";
-                break;
-            case (1):
-                status_ref = "cooking";
-                break;
-
-            case (2):
-                status_ref = "ready for pickup";
-                break;
-
-            case (3):
-                status_ref = "completed";
-                break;
-        }
-        return status_ref;
     }
 
     public Restaurant getRestaurant() {

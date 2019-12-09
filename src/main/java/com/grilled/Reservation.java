@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Reservation {
-    private DateTimeFormatter day = DateTimeFormatter.ofPattern("MMMM d EEEE"), time = DateTimeFormatter.ofPattern("HH:mm");
+    private DateTimeFormatter day = DateTimeFormatter.ofPattern("MMMM d"), time = DateTimeFormatter.ofPattern("HH:mm");
     private int id, guests;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -67,5 +67,13 @@ public class Reservation {
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+    }
+
+    public String getOrder_forDay() {
+        return this.order_for.format(day);
+    }
+
+    public String getOrder_forTime() {
+        return this.order_for.format(time);
     }
 }
