@@ -11,8 +11,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -91,13 +93,14 @@ public class HomeController {
         if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
             if (result.hasErrors()) {
                 ra.addFlashAttribute("message", "check input format");
+                return "redirect:/reservation"+reservation.getRestaurant().getAddress_town();
             } else {
                 reservation.setLogin(new Login());
                 reservation.getLogin().setTlf_type(session.getAttribute("auth_type").toString());
                 ra.addFlashAttribute("message", "new reservation added");
                 ordersRepo.addReservation(reservation);
+                return "redirect:/my-orders";
             }
-            return "redirect:/";
         } else {
             ra.addFlashAttribute("message", "log in before reserving");
             return "redirect:/login";
@@ -142,7 +145,7 @@ public class HomeController {
                 ordersRepo.addTakeaway(takeaway);
                 ra.addFlashAttribute("message", "take-away accepted");
             }
-            return "redirect:/take-away";
+            return "redirect:/my-orders";
         } else {
             ra.addFlashAttribute("message", "log in before reserving");
             return "redirect:/login";
@@ -156,7 +159,7 @@ public class HomeController {
             login.setTlf_type(session.getAttribute("auth_type").toString());
             model.addAttribute("reservations", ordersRepo.findAllReservations(null, login));
             model.addAttribute("takeaways", ordersRepo.findAllTakeaways(null, login));
-
+            model.addAttribute("today", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             return "my-orders/all-orders";
         } else {
             return "error/403";
@@ -171,14 +174,14 @@ public class HomeController {
 
             switch (directory) {
                 case ("takeaways"):
-                    login.setTlf_type(String.valueOf(session.getAttribute("auth_type").toString()));
+                    login.setTlf_type(session.getAttribute("auth_type").toString());
                     Takeaway takeaway = ordersRepo.findTakeaway(id, login);
                     takeaway.setOrder(ordersRepo.findTakeawayOrders(takeaway));
 
                     model.addAttribute("takeaway", takeaway);
                     return "my-orders/my-takeaway";
                 case ("reservations"):
-                    login.setTlf_type(String.valueOf(session.getAttribute("auth_type").toString()));
+                    login.setTlf_type(session.getAttribute("auth_type").toString());
                     //TODO view my reservation
                     model.addAttribute("reservation", ordersRepo.findReservation(id, login));
                     return "my-orders/my-reservation";

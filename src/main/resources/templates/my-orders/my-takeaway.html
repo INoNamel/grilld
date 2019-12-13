@@ -38,7 +38,7 @@
                         <td th:text="${dish.price}"></td>
                     </tr>
                     <tr>
-                        <td colspan="3" style="text-align: right; font-weight: bold" th:if="${takeaway.order != null}" th:text="${'Total: '+#aggregates.sum(takeaway.order.![price])+' dkk'}"></td>
+                        <td colspan="3" style="text-align: right; font-weight: bold" th:if="${!takeaway.order.isEmpty()}" th:text="${'Total: '+#aggregates.sum(takeaway.order.![price])+' dkk'}"></td>
                     </tr>
                 </table>
             </div>

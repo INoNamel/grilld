@@ -6,7 +6,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 public class Takeaway {
-    private DateTimeFormatter day = DateTimeFormatter.ofPattern("MMMM d"), time = DateTimeFormatter.ofPattern("HH:mm");
+    private DateTimeFormatter day = DateTimeFormatter.ofPattern("MMMM d"), time = DateTimeFormatter.ofPattern("HH:mm"), date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private int id, status = 0;
     private List<Dish> orders;
@@ -64,6 +64,10 @@ public class Takeaway {
 
     public String getTime() {
         return this.order_time.format(time);
+    }
+
+    public String getDate() {
+        return this.order_time.format(date);
     }
 
     public Restaurant getRestaurant() {

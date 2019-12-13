@@ -102,23 +102,49 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin/{directory}/delete/{id}")
-    public String deleteThis(@PathVariable(name = "directory") String directory, @PathVariable(name = "id") int id, RedirectAttributes ra){
+    @GetMapping("/{profile}/{directory}/delete/{id}")
+    public String deleteThis(@PathVariable(name = "profile") String profile, @PathVariable(name = "directory") String directory, @PathVariable(name = "id") int id, RedirectAttributes ra){
         if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
-            ra.addFlashAttribute("message", "#"+id+" deleted");
-            switch (directory) {
-                case ("dishes"):
-                    menuRepo.deleteDish(id);
-                    return "redirect:/admin/dishes";
-                case ("clients"):
-                    clientsRepo.deleteClient(id);
-                    return "redirect:/admin/clients";
-                case ("reservations"):
-                    ordersRepo.deleteReservation(id);
-                    return "redirect:/admin/reservations";
-                case ("restaurants"):
-                    menuRepo.deleteRestaurant(id);
-                    return "redirect:/admin/restaurants";
+            ra.addFlashAttribute("message", "item #"+id+" deleted");
+            switch (profile) {
+                case ("my-orders"):
+                    Login login = new Login();
+                    login.setTlf_type(session.getAttribute("auth_type").toString());
+                    switch (directory) {
+                        case ("takeaways"):
+                            if(ordersRepo.validateAction(login, id, "order_takeaway")) {
+                                ordersRepo.deleteTakeaway(id);
+                                return "redirect:/my-orders";
+                            } else {
+                                return "error/500";
+                            }
+                        case ("reservations"):
+                            if(ordersRepo.validateAction(login, id, "order_table")) {
+                                ordersRepo.deleteReservation(id);
+                                return "redirect:/my-orders";
+                            } else {
+                                return "error/500";
+                            }
+                        default:
+                            return "error/404";
+                    }
+                case ("admin"):
+                    switch (directory) {
+                        case ("dishes"):
+                            menuRepo.deleteDish(id);
+                            return "redirect:/admin/dishes";
+                        case ("clients"):
+                            clientsRepo.deleteClient(id);
+                            return "redirect:/admin/clients";
+                        case ("reservations"):
+                            ordersRepo.deleteReservation(id);
+                            return "redirect:/admin/reservations";
+                        case ("restaurants"):
+                            menuRepo.deleteRestaurant(id);
+                            return "redirect:/admin/restaurants";
+                        default:
+                            return "error/404";
+                    }
                 default:
                     return "error/404";
             }

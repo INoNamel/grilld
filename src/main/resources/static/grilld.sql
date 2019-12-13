@@ -79,7 +79,7 @@ CREATE TABLE `order_table` (
   `id` int(10) UNSIGNED NOT NULL,
   `ordered_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `restaurant_ref` tinyint(3) UNSIGNED DEFAULT NULL,
-  `guests_amount` set('1','2','3','4','5','6','7') COLLATE latin1_bin NOT NULL DEFAULT '1',
+  `guests_amount` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
   `ordered_for` datetime NOT NULL,
   `client_ref` varchar(10) COLLATE latin1_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
@@ -89,8 +89,8 @@ CREATE TABLE `order_table` (
 --
 
 INSERT INTO `order_table` (`id`, `ordered_on`, `restaurant_ref`, `guests_amount`, `ordered_for`, `client_ref`) VALUES
-(1, '2019-11-27 18:16:25', 1, '2', '2019-12-27 12:13:00', '63871233'),
-(2, '2019-11-23 18:16:25', 1, '3', '2019-12-17 15:20:00', '63871233');
+(1, '2019-11-27 18:16:25', 1, 2, '2019-12-27 12:13:00', '63871233'),
+(2, '2019-11-23 18:16:25', 1, 3, '2019-12-17 15:20:00', '63871233');
 
 -- --------------------------------------------------------
 

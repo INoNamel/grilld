@@ -23,6 +23,21 @@ public class OrdersRepository {
     @Autowired
     private JdbcTemplate jdbc;
 
+    boolean validateAction(Login login, int id, String order) {
+        String status = "";
+        if(order.equals("order_takeaway")) {
+            status = " AND status = '0'";
+        }
+        String query = ("SELECT COUNT(*) AS count FROM "+order+" WHERE id = "+ id +" AND client_ref = "+login.getTlf_type()+status+" ");
+
+        SqlRowSet rs = jdbc.queryForRowSet(query);
+        int counter = 0;
+        while (rs.next()) {
+            counter = rs.getInt("count");
+        }
+        return (counter == 1);
+    }
+
     Takeaway findTakeaway(int id, @Null Login login) {
         try {
 
