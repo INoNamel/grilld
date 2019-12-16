@@ -116,8 +116,7 @@ public class MenuRepository {
 
     List<Meal> findAllMeals() {
         try {
-            String query = ("SELECT * " +
-                    "FROM meal_type ");
+            String query = ("SELECT * FROM meal_type ");
             SqlRowSet rs = jdbc.queryForRowSet(query);
 
             List<Meal> mealList = new ArrayList<>();
@@ -135,9 +134,7 @@ public class MenuRepository {
 
     List<Restaurant> findAllRestaurants() {
         try {
-            String query = ("SELECT id, guests_max, address_town, address_street, workday_open, workday_closed, weekend_open, weekend_closed " +
-                    "FROM restaurant_list " +
-                    "INNER JOIN restaurant_time on restaurant_list.id = restaurant_time.restaurant_ref ");
+            String query = ("SELECT * FROM restaurant_list ");
             SqlRowSet rs = jdbc.queryForRowSet(query);
 
             List<Restaurant> restaurantList = new ArrayList<>();
@@ -175,9 +172,7 @@ public class MenuRepository {
             }
 
 
-            String query = ("SELECT id, guests_max, address_town, address_street, workday_open, workday_closed, weekend_open, weekend_closed " +
-                    "FROM restaurant_list " +
-                    "INNER JOIN restaurant_time on restaurant_list.id = restaurant_time.restaurant_ref " +
+            String query = ("SELECT * FROM restaurant_list " +
                     town_name + restaurant_id + " ");
             SqlRowSet rs = jdbc.queryForRowSet(query);
 
@@ -200,23 +195,35 @@ public class MenuRepository {
     }
 
     void addRestaurant(Restaurant restaurant) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        /*KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO restaurant_list (address_town, address_street, guests_max) VALUES (?, ?, ?) ",
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO restaurant_list (address_town, address_street, guests_max, workday_open, workday_closed, weekend_open, weekend_closed) VALUES (?, ?, ?, ?, ?, ?, ?) ",
                     Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, restaurant.getAddress_town());
             ps.setString(2, restaurant.getAddress_street());
             ps.setInt(3, restaurant.getGuests_max());
             return ps;
-        }, keyHolder);
+        }, keyHolder);*/
 
-        jdbc.update("INSERT INTO restaurant_time (restaurant_ref, workday_open, workday_closed, weekend_open, weekend_closed) " +
-                "VALUES (?, ?, ?, ?, ?) ",
-                keyHolder.getKey(), restaurant.getWorkday_open(), restaurant.getWorkday_closed(), restaurant.getWeekend_open(), restaurant.getWeekend_closed()
-            );
+        jdbc.update("INSERT INTO restaurant_list (address_town, address_street, guests_max, workday_open, workday_closed, weekend_open, weekend_closed) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?) ",
+                restaurant.getAddress_town(), restaurant.getAddress_street(), restaurant.getGuests_max(), restaurant.getWorkday_open(), restaurant.getWorkday_closed(), restaurant.getWeekend_open(), restaurant.getWeekend_closed()
+        );
     }
 
     void deleteRestaurant(int id) {
         jdbc.update("DELETE FROM restaurant_list WHERE id = " +id +" ");
+    }
+
+    void updateRestaurant(Restaurant restaurant) {
+        jdbc.update("UPDATE restaurant_list SET " +
+                "address_town='" + restaurant.getAddress_town() + "', " +
+                "address_street='" + restaurant.getAddress_street() + "', " +
+                "guests_max=" + restaurant.getGuests_max() + ", " +
+                "workday_open='" + restaurant.getWorkday_open() + "', " +
+                "workday_closed='" + restaurant.getWorkday_closed() + "', " +
+                "weekend_open='" + restaurant.getWeekend_open() + "', " +
+                "weekend_closed='" + restaurant.getWeekend_closed() + "' " +
+                "WHERE id = " + restaurant.getId()+ " ");
     }
 }

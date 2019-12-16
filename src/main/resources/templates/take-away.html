@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <input class="btn_edit" type="submit" value="PLACE ORDER" name="submit" />
+                <input th:if="${session.auth_type != 'employee' AND session.auth_type != 'admin'}" class="btn_edit" type="submit" value="PLACE ORDER" name="submit" />
                 <span id="msg" th:if="${message != null}" th:text="${message}"></span>
             </form>
         </div>

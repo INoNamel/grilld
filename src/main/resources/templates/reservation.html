@@ -15,18 +15,12 @@
             <form th:action="@{'/reservation-confirm'}" th:object="${reservationForm}" method=POST>
                 Amount of guests:
                 <select th:field="${reservationForm.guests}" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
+                    <option th:each="i : ${#numbers.sequence(1, reservationForm.restaurant.guests_max)}" th:value="${i}" th:text="${i}"></option>
                 </select>
                 <br>Date:
                 <input type="text" th:field="${reservationForm.order_for}" placeholder="2019-01-01 00:00" required/>
                 <input type="hidden" th:field="${reservationForm.restaurant.id}" required/>
-                <input class="submit_btn" type="submit" name="reserve" value="reserve" />
+                <input th:if="${session.auth_type != 'employee' AND session.auth_type != 'admin'}" class="submit_btn" type="submit" name="reserve" value="reserve" />
             </form>
         </div>
         <div class="reservation_right border_left">

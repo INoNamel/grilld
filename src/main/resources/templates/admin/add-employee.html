@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld Admin - add employee</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header th:insert="index.html :: header"></header>
+<main>
+    <div class="margin-top-130-auto">
+        <h1>Admin Panel - add employee</h1><br/>
+        <form action="/admin/employees/add-employee" th:if="${employeeForm != null}" th:object="${employeeForm}" method=POST>
+            <div class="flex flex-evenly">
+                <div>
+                    Name: <br/><input type="text" th:field="${employeeForm.name}" placeholder="name" required/>
+                </div>
+                <div>
+                    Password: <br/><input type="password" th:field="${employeeForm.password}" placeholder="password" required/>
+                </div>
+            </div>
+            <div class="flex space-between">
+                <a class="btn_bck" th:href="@{/admin/employees}">Back</a><button type="submit" class="btn_edit">Add</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

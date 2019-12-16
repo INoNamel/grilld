@@ -21,7 +21,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="reservation:${reservations}">
+                <th:block th:each="reservation:${reservations}">
+                <tr th:if="${reservation.expired == false}">
                     <td th:text="${reservation.restaurant.address_town}"></td>
                     <td th:text="${reservation.getOrder_forTime()+' – '+reservation.getOrder_forDay()}"></td>
                     <td th:text="${reservation.guests}"></td>
@@ -30,9 +31,32 @@
                         <a class="btn_delete" th:href="@{'my-orders/reservations/delete/' + ${reservation.id}}">Delete</a>
                     </td>
                 </tr>
+                </th:block>
                 </tbody>
             </table>
-
+            <h2>expired</h2>
+            <table class="info_table">
+                <thead>
+                <tr>
+                    <th scope="col">Restaurant</th>
+                    <th scope="col">Order for</th>
+                    <th scope="col">Guests</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="reservation:${reservations}">
+                    <tr th:if="${reservation.expired == true}">
+                        <td th:text="${reservation.restaurant.address_town}"></td>
+                        <td th:text="${reservation.getOrder_forTime()+' – '+reservation.getOrder_forDay()}"></td>
+                        <td th:text="${reservation.guests}"></td>
+                        <td>
+                            <a class="btn_edit" href="">Edit</a>
+                            <a class="btn_delete" th:href="@{'my-orders/reservations/delete/' + ${reservation.id}}">Delete</a>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
 
 
         </div>

@@ -174,7 +174,7 @@ public class OrdersRepository {
         }
     }
 
-    List<Reservation> findAllReservations(@Null Restaurant restaurant, @Null Login login) {
+    List<Reservation> findAllReservations(@Null Restaurant restaurant, @Null Login login, @Null boolean order) {
         try {
 
             String restaurant_id = "";
@@ -187,13 +187,15 @@ public class OrdersRepository {
                 login_tlf = "WHERE tlf = "+login.getTlf_type();
             }
 
+            String order_by = " ORDER BY order_id DESC ";
+            if(order) {
+                order_by = " ORDER BY ordered_for DESC ";
+            }
 
             String query = ("SELECT order_table.id as order_id, ordered_on, guests_amount, ordered_for, tlf, address_town FROM order_table "+
                     "INNER JOIN client_list ON order_table.client_ref = client_list.tlf " +
                     "INNER JOIN restaurant_list ON order_table.restaurant_ref = restaurant_list.id " +
-                    login_tlf+
-
-                    " ORDER BY order_id DESC");
+                    login_tlf + order_by + " ");
             SqlRowSet rs = jdbc.queryForRowSet(query);
 
             List<Reservation> reservationList = new ArrayList<>();
@@ -207,6 +209,9 @@ public class OrdersRepository {
                 reservation.setOrder_time(LocalDateTime.parse(rs.getString("ordered_on"), formatter));
                 reservation.setOrder_for(LocalDateTime.parse(rs.getString("ordered_for"), formatter));
                 reservation.setGuests(rs.getInt("guests_amount"));
+                if(LocalDateTime.parse(rs.getString("ordered_for"), formatter).isAfter(LocalDateTime.now())) {
+                    reservation.setExpired(false);
+                }
                 reservationList.add(reservation);
             }
 

@@ -40,4 +40,6 @@ public class LoginRepository {
                 login.getName(), login.getTlf_type(), DigestUtils.sha256Hex(login.getPassword())
         );
     }
+
+
 }

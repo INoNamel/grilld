@@ -21,6 +21,8 @@ public class Reservation {
     private Login login;
     private Restaurant restaurant;
 
+    private boolean expired = true;
+
     Reservation(){
 
     }
@@ -79,5 +81,13 @@ public class Reservation {
 
     public String getOrder_forTime() {
         return this.order_for.format(time);
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

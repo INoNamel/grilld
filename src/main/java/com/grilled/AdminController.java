@@ -86,7 +86,7 @@ public class AdminController {
                     }
                 case ("reservations"):
                     if(session.getAttribute("auth_type").equals("employee")) {
-                        model.addAttribute(directory, ordersRepo.findAllReservations(null,null));
+                        model.addAttribute(directory, ordersRepo.findAllReservations(null,null, false));
                         return "admin/show-reservations";
                     }
                 case ("takeaways"):
@@ -178,6 +178,22 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/admin/employees/add-employee")
+    public String addEmployee(@ModelAttribute Login login, BindingResult result, RedirectAttributes ra) {
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && session.getAttribute("auth_type").equals("admin")) {
+            if (result.hasErrors()) {
+                ra.addFlashAttribute("message", "check input format");
+                return "redirect:/admin/employees/add";
+            } else {
+                ra.addFlashAttribute("message", "new employee added");
+                employeesRepo.addEmployee(login);
+                return "redirect:/admin/employees";
+            }
+        } else {
+            return "error/403";
+        }
+    }
+
     @PostMapping("/admin/dishes/add-dish")
     public String addDish(@ModelAttribute Dish dish, BindingResult result, RedirectAttributes ra) {
         if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && session.getAttribute("auth_type").equals("admin")) {
@@ -218,8 +234,8 @@ public class AdminController {
                     menuRepo.findDish(id);
                     return "admin/edit-dish";
                 case ("restaurants"):
-                    menuRepo.findRestaurant(null, id);
-                    return "admin/edit-dish";
+                    model.addAttribute("restaurantForm", menuRepo.findRestaurant(null, id));
+                    return "admin/edit-restaurant";
                 case ("reservations"):
                     //TODO edit reservations?
 
@@ -245,7 +261,22 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/admin/{directory}/update-takeaway")
+    @PostMapping("/admin/restaurants/update-restaurant")
+    public String updateRestaurant(@ModelAttribute Restaurant restaurant, BindingResult result, RedirectAttributes ra) {
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && session.getAttribute("auth_type").equals("admin")) {
+            if (result.hasErrors()) {
+                ra.addFlashAttribute("message", "check input format");
+            } else {
+                ra.addFlashAttribute("message", "restaurant updated");
+                menuRepo.updateRestaurant(restaurant);
+            }
+            return "redirect:/admin/restaurants";
+        } else {
+            return "error/403";
+        }
+    }
+
+    @PostMapping("/admin/takeaways/update-takeaway")
     public String updateTakeaway(@ModelAttribute Takeaway takeaway, BindingResult result, RedirectAttributes ra) {
         if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && session.getAttribute("auth_type").equals("employee")) {
             if (result.hasErrors()) {

@@ -1,5 +1,6 @@
 package com.grilled;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -61,5 +62,12 @@ public class EmployeesRepository {
                 "name='" + login.getName() + "', " +
                 "drowssap='" + login.getPassword() + "', " +
                 "WHERE name = '" + login.getName()+ "' ");
+    }
+
+    void addEmployee(Login login) {
+        jdbc.update(
+                "INSERT INTO terces (name, drowssap) VALUES (?, ?)",
+                login.getName(), DigestUtils.sha256Hex(login.getPassword())
+        );
     }
 }

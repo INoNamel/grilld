@@ -157,7 +157,7 @@ public class HomeController {
         if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
             Login login = new Login();
             login.setTlf_type(session.getAttribute("auth_type").toString());
-            model.addAttribute("reservations", ordersRepo.findAllReservations(null, login));
+            model.addAttribute("reservations", ordersRepo.findAllReservations(null, login, true));
             model.addAttribute("takeaways", ordersRepo.findAllTakeaways(null, login));
             model.addAttribute("today", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             return "my-orders/all-orders";
