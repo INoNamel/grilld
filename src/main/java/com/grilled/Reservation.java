@@ -2,12 +2,16 @@ package com.grilled;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Max;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Reservation {
     private DateTimeFormatter day = DateTimeFormatter.ofPattern("MMMM d"), time = DateTimeFormatter.ofPattern("HH:mm");
-    private int id, guests;
+    private int id;
+
+    @Max(7)
+    private int guests;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime order_time;

@@ -189,9 +189,11 @@ a:link, a:visited, a:hover, a:active {
 }
 .info_table td:last-child {
     text-align: right;
+    width: 150px;
 }
 .takeaway_table th:last-child:td:last-child {
     text-align: right;
+    width: 150px;
 }
 .info_table td, .takeaway_table td {
     border-top: 1px solid lightgray;

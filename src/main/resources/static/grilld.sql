@@ -220,6 +220,24 @@ INSERT INTO `terces` (`name`, `type`, `drowssap`) VALUES
 ('Issa', 'employee', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5'),
 ('admin', 'admin', '20f3765880a5c269b747e1e906054a4b4a3a991259f1e16b5dde4742cec2319a');
 
+
+DELIMITER $$
+CREATE TRIGGER `w1` BEFORE INSERT ON `order_table` FOR EACH ROW BEGIN
+ IF (NEW.guests_amount > 7) THEN
+  SET NEW.guests_amount = 7;
+ END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `w2` BEFORE UPDATE ON `order_table` FOR EACH ROW BEGIN
+ IF (NEW.guests_amount > 7) THEN
+  SET NEW.guests_amount = 7;
+ END IF;
+END
+$$
+DELIMITER ;
+
 --
 -- Indexes for dumped tables
 --
