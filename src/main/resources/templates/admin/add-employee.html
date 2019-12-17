@@ -13,14 +13,14 @@
         <form action="/admin/employees/add-employee" th:if="${employeeForm != null}" th:object="${employeeForm}" method=POST>
             <div class="flex flex-evenly">
                 <div>
-                    Name: <br/><input type="text" th:field="${employeeForm.name}" placeholder="name" required/>
+                    Name: <br/><input type="text" th:field="${employeeForm.name}" pattern="[A-Za-z]{3,16}" placeholder="name" required/>
                 </div>
                 <div>
-                    Password: <br/><input type="password" th:field="${employeeForm.password}" placeholder="password" required/>
+                    Password: <br/><input type="password" th:field="${employeeForm.password}" pattern=".{3,16}" placeholder="password" required/>
                 </div>
             </div>
             <div class="flex space-between">
-                <a class="btn_bck" th:href="@{/admin/employees}">Back</a><button type="submit" class="btn_edit">Add</button>
+                <button type="submit" class="btn_edit">Add</button><a class="btn_bck" th:href="@{/admin/employees}">Back</a>
             </div>
         </form>
     </div>

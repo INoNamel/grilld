@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `grilld` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
+CREATE DATABASE  IF NOT EXISTS `grilld`;
 USE `grilld`;
 -- MySQL dump 10.13  Distrib 8.0.15, for Win64 (x86_64)
 --

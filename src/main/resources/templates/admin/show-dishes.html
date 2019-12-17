@@ -31,10 +31,10 @@
                         <td th:text="${dish.meal.type}"></td>
                         <td th:text="${dish.desc}"></td>
                         <td th:text="${dish.price}"></td>
-                        <td th:text="${dish.available}"></td>
+                        <td th:text="${dish.available} ? 'yes': 'no' "></td>
 
                         <td>
-                            <a class="btn_edit">Edit</a>
+                            <a class="btn_edit" th:href="@{'dishes/edit/' + ${dish.id}}">Edit</a>
                             <a class="btn_delete" th:href="@{'dishes/delete/' + ${dish.id}}">Delete</a>
                         </td>
                     </tr>

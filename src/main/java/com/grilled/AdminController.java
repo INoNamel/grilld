@@ -231,7 +231,8 @@ public class AdminController {
         if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
             switch (directory) {
                 case ("dishes"):
-                    menuRepo.findDish(id);
+                    model.addAttribute("meals", menuRepo.findAllMeals());
+                    model.addAttribute("dishForm", menuRepo.findDish(id));
                     return "admin/edit-dish";
                 case ("restaurants"):
                     model.addAttribute("restaurantForm", menuRepo.findRestaurant(null, id));
@@ -286,6 +287,20 @@ public class AdminController {
                 ordersRepo.updateTakeaway(takeaway);
             }
             return "redirect:/admin/takeaways";
+        } else {
+            return "error/403";
+        }
+    }
+    @PostMapping("/admin/dishes/update-dish")
+    public String updateDish(@ModelAttribute Dish dish, BindingResult result, RedirectAttributes ra) {
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && session.getAttribute("auth_type").equals("admin")) {
+            if (result.hasErrors()) {
+                ra.addFlashAttribute("message", "check input format");
+            } else {
+                ra.addFlashAttribute("message", "dish updated");
+                menuRepo.updateDish(dish);
+            }
+            return "redirect:/admin/dishes";
         } else {
             return "error/403";
         }

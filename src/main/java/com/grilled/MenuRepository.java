@@ -27,7 +27,7 @@ public class MenuRepository {
             String query = ("SELECT dish_list.id as id, meal_type.id as meal_id, name, type, description, price, available " +
                     "FROM dish_list " +
                     "INNER JOIN meal_type ON dish_list.meal_ref = meal_type.id " +
-                    "WHERE id = "+id+" ");
+                    "WHERE dish_list.id = "+id+" ");
             SqlRowSet rs = jdbc.queryForRowSet(query);
             Dish dish = new Dish();
 
@@ -107,11 +107,11 @@ public class MenuRepository {
     void updateDish(Dish dish) {
         jdbc.update("UPDATE dish_list SET " +
                 "name='" + dish.getName() + "', " +
-                "meal_ref='" + dish.getMeal() + "', " +
-                "description=" + dish.getDesc() + ", " +
+                "meal_ref=" + dish.getMeal().getId() + ", " +
+                "description='" + dish.getDesc() + "', " +
                 "price=" + dish.getPrice() + ", " +
-                "available=" + dish.isAvailable() + ", " +
-                "WHERE id = " + dish.getId()+ " ");
+                "available=" + dish.isAvailable() +
+                " WHERE id = " + dish.getId() + " ");
     }
 
     List<Meal> findAllMeals() {

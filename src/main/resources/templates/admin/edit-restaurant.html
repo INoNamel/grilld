@@ -20,10 +20,7 @@
                         Street: <br><textarea th:field="${restaurantForm.address_street}" required></textarea>
                     </div>
                     <div>
-                        Max guests:
-                        <select th:field="${restaurantForm.guests_max}" required>
-                            <option th:each="i : ${#numbers.sequence(1, restaurantForm.guests_max)}" th:value="${i}" th:text="${i}"></option>
-                        </select>
+                        Max guests: <br><input type="number" min="1" max="99" step="1" th:field="${restaurantForm.guests_max}" placeholder="1-99" required/>
                     </div>
                     <input type="hidden" th:field="${restaurantForm.id}" required/>
                 </div>
@@ -42,7 +39,9 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn_edit">Update</button><a class="btn_bck" th:href="@{/admin/restaurants}">Back</a>
+                <div class="flex space-between">
+                    <button type="submit" class="btn_edit">Update</button><a class="btn_bck" th:href="@{/admin/restaurants}">Back</a>
+                </div>
             </div>
         </form>
     </div>

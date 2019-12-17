@@ -11,7 +11,7 @@
     <div class="margin-top-130-auto">
         <h1>Admin Panel - add dish</h1><br/>
         <form action="/admin/dishes/add-dish" th:if="${dishForm != null}" th:object="${dishForm}" method=POST>
-            <div class="flex flex-evenly">
+            <div class="flex space-between">
                 <div>
                     Name: <br/><input type="text" th:field="${dishForm.name}" placeholder="name" required/>
                 </div>
@@ -21,15 +21,17 @@
                         <option th:each="meal:${meals}" th:value="${meal.id}" th:text="${meal.type}"></option>
                     </select>
                 </div>
-                <div>
-                    Price: <br/><input type="text" th:field="${dishForm.price}" placeholder="price" required/>
-                </div>
+            </div>
+            <div class="flex space-between">
                 <div>
                     Description: <br/><textarea th:field="${dishForm.desc}" placeholder="description" required></textarea>
                 </div>
+                <div>
+                    Price: <br/><input type="text" th:field="${dishForm.price}" placeholder="price" required/>
+                </div>
             </div>
             <div class="flex space-between">
-                <a class="btn_bck" th:href="@{/admin/dishes}">Back</a><button type="submit" class="btn_edit">Add</button>
+                <button type="submit" class="btn_edit">Add</button><a class="btn_bck" th:href="@{/admin/dishes}">Back</a>
             </div>
         </form>
     </div>

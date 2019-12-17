@@ -9,9 +9,9 @@
 <header th:insert="index.html :: header"></header>
 <main>
     <div class="margin-top-130-auto">
-        <h1>Admin Panel - add dish</h1><br/>
+        <h1>Admin Panel - add restaurant</h1><br/>
         <form action="/admin/restaurants/add-restaurant" th:if="${restaurantForm != null}" th:object="${restaurantForm}" method=POST>
-            <div class="flex flex-evenly">
+            <div class="flex flex-evenly margin-bottom">
                 <div>
                     Town: <br><input type="text" th:field="${restaurantForm.address_town}" placeholder="town address" required/>
                 </div>
@@ -19,10 +19,10 @@
                     Street: <br><input type="text" th:field="${restaurantForm.address_street}" placeholder="street address" required/>
                 </div>
                 <div>
-                    Guests: <br><input type="text" th:field="${restaurantForm.guests_max}" placeholder="guests" required/>
+                    Guests: <br><input type="number" min="1" max="99" step="1" th:field="${restaurantForm.guests_max}" placeholder="1-99" required/>
                 </div>
             </div>
-            <div>
+            <div class="flex space-between margin-bottom">
                 <div>
                     Workday open: <br><input type="text" th:field="${restaurantForm.workday_open}" value="08:00" placeholder="HH:mm" required/>
                 </div>
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="flex space-between">
-                <a class="btn_bck" th:href="@{/admin/restaurants}">Back</a><button type="submit" class="btn_edit">Add</button>
+                <button type="submit" class="btn_edit">Add</button><a class="btn_bck" th:href="@{/admin/restaurants}">Back</a>
             </div>
         </form>
     </div>

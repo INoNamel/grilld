@@ -11,9 +11,9 @@
         <div class="margin-top-130-auto">
             <h1>Sign up</h1>
             <form th:if="${session.logged == null}" th:action="@{/signup}" th:object="${loginForm}" method=POST>
-                Name: <input type="text" th:field="*{name}" placeholder="name" required/>
+                Name: <input type="text" th:field="*{name}" pattern="[A-Za-z]{3,16}" placeholder="name" required/>
                 Tlf.: <input type="tel" th:field="*{tlf_type}" pattern="[0-9]{6,10}" placeholder="66666666" required/>
-                Password: <input type="password" th:field="*{password}" placeholder="password" required/>
+                Password: <input type="password" th:field="*{password}" pattern=".{3,16}" placeholder="password" required/>
 
                 <input type="submit" class="btn_edit" value="sign up"/>
                 <div id="msg" th:if="${message != null}">
