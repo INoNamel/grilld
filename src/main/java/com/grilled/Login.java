@@ -1,8 +1,16 @@
 package com.grilled;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+
 public class Login {
     private int id;
     private String name, tlf_type, password;
+
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private LocalDate joined;
+
 
     Login(){}
 
@@ -36,5 +44,13 @@ public class Login {
 
     public void setTlf_type(String tlf_type) {
         this.tlf_type = tlf_type;
+    }
+
+    public LocalDate getJoined() {
+        return joined;
+    }
+
+    public void setJoined(LocalDate joined) {
+        this.joined = joined;
     }
 }

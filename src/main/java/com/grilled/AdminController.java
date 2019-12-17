@@ -11,6 +11,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,11 +89,13 @@ public class AdminController {
                 case ("reservations"):
                     if(session.getAttribute("auth_type").equals("employee")) {
                         model.addAttribute(directory, ordersRepo.findAllReservations(null,null, false));
+                        model.addAttribute("today", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                         return "admin/show-reservations";
                     }
                 case ("takeaways"):
                     if(session.getAttribute("auth_type").equals("employee")) {
                         model.addAttribute(directory, ordersRepo.findAllTakeaways(null, null));
+                        model.addAttribute("today", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                         return "admin/show-takeaways";
                     }
                 default:
@@ -131,17 +135,25 @@ public class AdminController {
                 case ("admin"):
                     switch (directory) {
                         case ("dishes"):
-                            menuRepo.deleteDish(id);
-                            return "redirect:/admin/dishes";
+                            if(session.getAttribute("auth_type").equals("admin")) {
+                                menuRepo.deleteDish(id);
+                                return "redirect:/admin/dishes";
+                            }
                         case ("clients"):
-                            clientsRepo.deleteClient(id);
-                            return "redirect:/admin/clients";
-                        case ("reservations"):
-                            ordersRepo.deleteReservation(id);
-                            return "redirect:/admin/reservations";
+                            if(session.getAttribute("auth_type").equals("admin")) {
+                                clientsRepo.deleteClient(id);
+                                return "redirect:/admin/clients";
+                            }
                         case ("restaurants"):
-                            menuRepo.deleteRestaurant(id);
-                            return "redirect:/admin/restaurants";
+                            if(session.getAttribute("auth_type").equals("admin")) {
+                                menuRepo.deleteRestaurant(id);
+                                return "redirect:/admin/restaurants";
+                            }
+                        case ("reservations"):
+                            if(session.getAttribute("auth_type").equals("employee")) {
+                                ordersRepo.deleteReservation(id);
+                                return "redirect:/admin/reservations";
+                            }
                         default:
                             return "error/404";
                     }
@@ -231,29 +243,31 @@ public class AdminController {
         if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
             switch (directory) {
                 case ("dishes"):
-                    model.addAttribute("meals", menuRepo.findAllMeals());
-                    model.addAttribute("dishForm", menuRepo.findDish(id));
-                    return "admin/edit-dish";
+                    if(session.getAttribute("auth_type").equals("admin")) {
+                        model.addAttribute("meals", menuRepo.findAllMeals());
+                        model.addAttribute("dishForm", menuRepo.findDish(id));
+                        return "admin/edit-dish";
+                    }
                 case ("restaurants"):
-                    model.addAttribute("restaurantForm", menuRepo.findRestaurant(null, id));
-                    return "admin/edit-restaurant";
-                case ("reservations"):
-                    //TODO edit reservations?
-
-                    return "admin/edit-reservation";
+                    if(session.getAttribute("auth_type").equals("admin")) {
+                        model.addAttribute("restaurantForm", menuRepo.findRestaurant(null, id));
+                        return "admin/edit-restaurant";
+                    }
                 case ("takeaways"):
-                    Takeaway takeaway = ordersRepo.findTakeaway(id, null);
-                    takeaway.setOrder(ordersRepo.findTakeawayOrders(takeaway));
+                    if(session.getAttribute("auth_type").equals("employee")) {
+                        Takeaway takeaway = ordersRepo.findTakeaway(id, null);
+                        takeaway.setOrder(ordersRepo.findTakeawayOrders(takeaway));
 
-                    Map<Integer, String> status_list = new HashMap<>();
-                    status_list.put(0, "under review");
-                    status_list.put(1, "cooking");
-                    status_list.put(2, "ready for pickup");
-                    status_list.put(3, "completed");
+                        Map<Integer, String> status_list = new HashMap<>();
+                        status_list.put(0, "under review");
+                        status_list.put(1, "cooking");
+                        status_list.put(2, "ready for pickup");
+                        status_list.put(3, "completed");
 
-                    model.addAttribute("status_list", status_list);
-                    model.addAttribute("takeawayForm", takeaway);
-                    return "admin/edit-takeaway";
+                        model.addAttribute("status_list", status_list);
+                        model.addAttribute("takeawayForm", takeaway);
+                        return "admin/edit-takeaway";
+                    }
                 default:
                     return "error/404";
             }

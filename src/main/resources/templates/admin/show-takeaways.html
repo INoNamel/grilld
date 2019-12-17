@@ -11,19 +11,23 @@
     <div class="margin-top-130-auto">
         <h1>Admin Panel - <a href="takeaways">[take-aways]</a> | <a href="reservations">reservations</a></h1><br/>
         <span id="msg" th:if="${message != null}" th:text="${message}"></span>
-        <div class="flex" th:if="${takeaways != null}">
+        <div th:if="${takeaways != null}">
+            <h2>today</h2>
             <table class="info_table">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
+                        <th scope="col">Restaurant</th>
                         <th scope="col">Time</th>
                         <th scope="col">Client tlf.</th>
                         <th scope="col">Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="takeaway:${takeaways}">
+                    <th:block th:each="takeaway:${takeaways}">
+                    <tr th:if="${takeaway.getDate() == today}">
                         <td th:text="${takeaway.id}"></td>
+                        <td th:text="${takeaway.restaurant.address_town}"></td>
                         <td th:text="${takeaway.getTime()}"></td>
                         <td th:text="${takeaway.login.tlf_type}"></td>
                         <td th:switch="${takeaway.status}">
@@ -34,6 +38,36 @@
                         </td>
                         <td><a class="btn_edit" th:href="@{'takeaways/edit/' + ${takeaway.id}}">View</a></td>
                     </tr>
+                    </th:block>
+                </tbody>
+            </table>
+            <h2>archived</h2>
+            <table class="info_table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Restaurant</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Client tlf.</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="takeaway:${takeaways}">
+                    <tr th:if="${takeaway.getDate() != today}">
+                        <td th:text="${takeaway.id}"></td>
+                        <td th:text="${takeaway.restaurant.address_town}"></td>
+                        <td th:text="${takeaway.getTime()+' – '+takeaway.getDay()}"></td>
+                        <td th:text="${takeaway.login.tlf_type}"></td>
+                        <td th:switch="${takeaway.status}">
+                            <span style="color: steelblue" th:case="0">under review</span>
+                            <span style="color: #d7c21b" th:case="1">cooking</span>
+                            <span style="color: green" th:case="2">ready for pickup</span>
+                            <span style="color: darkviolet" th:case="3">completed</span>
+                        </td>
+                        <td><a class="btn_edit" th:href="@{'takeaways/edit/' + ${takeaway.id}}">View</a></td>
+                    </tr>
+                </th:block>
                 </tbody>
             </table>
         </div>

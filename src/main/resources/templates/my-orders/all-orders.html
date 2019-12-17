@@ -27,8 +27,7 @@
                     <td th:text="${reservation.getOrder_forTime()+' – '+reservation.getOrder_forDay()}"></td>
                     <td th:text="${reservation.guests}"></td>
                     <td>
-                        <a class="btn_edit" href="">Edit</a>
-                        <a class="btn_delete" th:href="@{'my-orders/reservations/delete/' + ${reservation.id}}">Delete</a>
+                        <a class="btn_delete" th:href="@{'my-orders/reservations/delete/' + ${reservation.id}}">Cancel</a>
                     </td>
                 </tr>
                 </th:block>
@@ -55,8 +54,6 @@
                 </th:block>
                 </tbody>
             </table>
-
-
         </div>
         <div>
             <h1>Take-aways</h1>
@@ -64,11 +61,11 @@
 
             <table class="info_table">
                 <thead>
-                <tr>
-                    <th scope="col">Restaurant</th>
-                    <th scope="col">When</th>
-                    <th scope="col">Status</th>
-                </tr>
+                    <tr>
+                        <th scope="col">Restaurant</th>
+                        <th scope="col">When</th>
+                        <th scope="col">Status</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <th:block th:each="takeaway:${takeaways}">

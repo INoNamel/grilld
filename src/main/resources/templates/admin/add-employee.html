@@ -11,9 +11,9 @@
     <div class="margin-top-130-auto">
         <h1>Admin Panel - add employee</h1><br/>
         <form action="/admin/employees/add-employee" th:if="${employeeForm != null}" th:object="${employeeForm}" method=POST>
-            <div class="flex flex-evenly">
+            <div class="flex flex-evenly margin-bottom">
                 <div>
-                    Name: <br/><input type="text" th:field="${employeeForm.name}" pattern="[A-Za-z]{3,16}" placeholder="name" required/>
+                    Name: <br/><input type="text" th:field="${employeeForm.name}" pattern="[a-zA-Z][a-zA-Z ]{3,16}" placeholder="name" required/>
                 </div>
                 <div>
                     Password: <br/><input type="password" th:field="${employeeForm.password}" pattern=".{3,16}" placeholder="password" required/>

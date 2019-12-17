@@ -142,38 +142,6 @@ public class OrdersRepository {
                 " WHERE id = " + takeaway.getId()+ " ");
     }
 
-    Reservation findReservation(int id, @Null Login login) {
-        try {
-
-            String login_tlf = "";
-            if(login != null) {
-                login_tlf = " HAVING tlf = "+login.getTlf_type();
-            }
-
-            String query = ("SELECT order_table.id as order_id, ordered_on, guests_amount, ordered_for, tlf, address_town FROM order_table "+
-                    "INNER JOIN client_list ON order_table.client_ref = client_list.tlf " +
-                    "INNER JOIN restaurant_list ON order_table.restaurant_ref = restaurant_list.id " +
-                    "WHERE order_table.id = " + id + login_tlf + " ");
-            SqlRowSet rs = jdbc.queryForRowSet(query);
-
-            Reservation reservation = new Reservation();
-            while (rs.next()) {
-                reservation.setId(rs.getInt("order_id"));
-                reservation.setLogin(new Login());
-                reservation.getLogin().setTlf_type(rs.getString("tlf"));
-                reservation.setRestaurant(new Restaurant());
-                reservation.getRestaurant().setAddress_town(rs.getString("address_town"));
-                reservation.setOrder_time(LocalDateTime.parse(rs.getString("ordered_on"), formatter));
-                reservation.setOrder_for(LocalDateTime.parse(rs.getString("ordered_for"), formatter));
-                reservation.setGuests(rs.getInt("guests_amount"));
-            }
-
-            return reservation;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     List<Reservation> findAllReservations(@Null Restaurant restaurant, @Null Login login, @Null boolean order) {
         try {
 
@@ -223,15 +191,6 @@ public class OrdersRepository {
 
     void deleteReservation(int id) {
         jdbc.update("DELETE FROM order_table WHERE id = " +id +" ");
-    }
-
-    void updateReservation(Reservation reservation) {
-        jdbc.update("UPDATE order_takeaway SET " +
-                "ordered_for='" + reservation.getOrder_for() + "', " +
-                "restaurant_ref='" + reservation.getRestaurant().getId() + "', " +
-                "client_ref=" + reservation.getLogin().getTlf_type() + ", " +
-                "guests_amount=" + reservation.getGuests() + ", " +
-                "WHERE id = " + reservation.getId()+ " ");
     }
 
     void addReservation(Reservation reservation) {

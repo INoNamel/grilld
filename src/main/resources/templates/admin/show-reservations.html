@@ -16,6 +16,7 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
+                        <th scope="col">Restaurant</th>
                         <th scope="col">Order on</th>
                         <th scope="col">Order for</th>
                         <th scope="col">Client tlf.</th>
@@ -25,11 +26,12 @@
                 <tbody>
                     <tr th:each="reservation:${reservations}">
                         <td th:text="${reservation.id}"></td>
+                        <td th:text="${reservation.restaurant.address_town}"></td>
                         <td th:text="${reservation.order_time}"></td>
                         <td th:text="${reservation.order_for}"></td>
                         <td th:text="${reservation.login.tlf_type}"></td>
                         <td th:text="${reservation.guests}"></td>
-                        <td><a class="btn_edit">Edit</a><a class="btn_delete" th:href="@{'reservations/delete/' + ${reservation.id}}">Delete</a></td>
+                        <td><a class="btn_delete" th:href="@{'reservations/delete/' + ${reservation.id}}">Delete</a></td>
                     </tr>
                 </tbody>
             </table>

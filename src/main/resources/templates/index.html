@@ -10,15 +10,18 @@
     <div id="logo"><a href="/"><img src="" th:src="@{/img/grilld.png}" height="125px;" alt="" /></a></div>
     <div id="nav_menu">
         <h2><a href="/">Menu</a> – <a href="/reservation">Reserve Table</a> – <a href="/take-away">Take Away</a>
-        <a th:if="${session.auth_type == 'admin'}" href="/admin/dishes"> – Admin</a>
-        <a th:if="${session.auth_type == 'employee'}" href="/admin/takeaways"> – Admin</a>
+            <th:block th:if="${session.logged == true}"> –
+                <a th:if="${session.auth_type == 'admin'}" href="/admin/dishes"> Admin</a>
+                <a th:if="${session.auth_type == 'employee'}" href="/admin/takeaways"> Admin</a>
+                <a th:if="${session.auth_type != 'employee' AND session.auth_type != 'admin'}" href="/my-orders"> My Orders</a>
+            </th:block>
         </h2>
     </div>
     <div id="login">
         <h1 th:if="${session.logged == null}"><a href="/signup" >Sign up</a> | <a href="/login">Log in</a></h1>
         <h1 th:if="${session.logged == true}">
             <span th:text="${session.auth_name}"></span>
-            <a th:if="${session.auth_type != 'employee' AND session.auth_type != 'admin'}" class="btn_edit" href="/my-orders">profile</a>
+            <a th:if="${session.auth_type != 'employee' AND session.auth_type != 'admin'}" class="btn_edit" href="/my-profile">profile</a>
             <a class="btn_log" href="/logout">log out</a>
         </h1>
     </div>

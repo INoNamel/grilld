@@ -30,6 +30,9 @@ public class HomeController {
     private LoginRepository loginRepo;
 
     @Autowired
+    private ClientsRepository clientsRepo;
+
+    @Autowired
     private MenuRepository menuRepo;
 
     @Autowired
@@ -153,8 +156,8 @@ public class HomeController {
     }
 
     @GetMapping("/my-orders")
-    public String profile(Model model){
-        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
+    public String myOrders(Model model){
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && !session.getAttribute("auth_type").equals("admin") && !session.getAttribute("auth_type").equals("employee")) {
             Login login = new Login();
             login.setTlf_type(session.getAttribute("auth_type").toString());
             model.addAttribute("reservations", ordersRepo.findAllReservations(null, login, true));
@@ -166,28 +169,42 @@ public class HomeController {
         }
     }
 
-    @GetMapping("/my-orders/{directory}/view/{id}")
-    public String viewOrder(@PathVariable(name = "directory") String directory, @PathVariable(name = "id") int id, Model model){
-        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true)) {
+    @GetMapping("/my-profile")
+    public String profile(Model model){
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && !session.getAttribute("auth_type").equals("admin") && !session.getAttribute("auth_type").equals("employee")) {
+            model.addAttribute("loginForm", clientsRepo.findClient(session.getAttribute("auth_type").toString()));
+            return "my-profile";
+        } else {
+            return "error/403";
+        }
+    }
 
+    @PostMapping("/my-profile/update")
+    public String update_profile(@ModelAttribute Login login, BindingResult result, RedirectAttributes ra) {
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && !session.getAttribute("auth_type").equals("admin") && !session.getAttribute("auth_type").equals("employee")) {
+            if (!result.hasErrors() && login.getTlf_type().equals(session.getAttribute("auth_type").toString())) {
+                ra.addFlashAttribute("message", "credentials updated");
+                clientsRepo.updateClient(login);
+            } else {
+                ra.addFlashAttribute("message", "check input format");
+            }
+            return "redirect:/my-profile";
+        } else {
+            return "error/403";
+        }
+    }
+
+    @GetMapping("/my-orders/takeaways/view/{id}")
+    public String viewOrder(@PathVariable(name = "id") int id, Model model){
+        if(session.getAttribute("logged") != null && session.getAttribute("logged").equals(true) && !session.getAttribute("auth_type").equals("admin") && !session.getAttribute("auth_type").equals("employee")) {
             Login login = new Login();
 
-            switch (directory) {
-                case ("takeaways"):
-                    login.setTlf_type(session.getAttribute("auth_type").toString());
-                    Takeaway takeaway = ordersRepo.findTakeaway(id, login);
-                    takeaway.setOrder(ordersRepo.findTakeawayOrders(takeaway));
+            login.setTlf_type(session.getAttribute("auth_type").toString());
+            Takeaway takeaway = ordersRepo.findTakeaway(id, login);
+            takeaway.setOrder(ordersRepo.findTakeawayOrders(takeaway));
 
-                    model.addAttribute("takeaway", takeaway);
-                    return "my-orders/my-takeaway";
-                case ("reservations"):
-                    login.setTlf_type(session.getAttribute("auth_type").toString());
-                    //TODO view my reservation
-                    model.addAttribute("reservation", ordersRepo.findReservation(id, login));
-                    return "my-orders/my-reservation";
-                default:
-                    return "error/404";
-            }
+            model.addAttribute("takeaway", takeaway);
+            return "my-orders/my-takeaway";
         } else {
             return "error/403";
         }
