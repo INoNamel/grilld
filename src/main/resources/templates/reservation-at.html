@@ -18,9 +18,9 @@
                 </div>
             </a>
         </div>
-    </div>
-    <div th:if="${restaurants == null or restaurants.isEmpty()}">
-        <h3>Nothing found sorry</h3>
+        <div th:if="${restaurants != null && restaurants.isEmpty()}">
+            <h3>Nothing found sorry</h3>
+        </div>
     </div>
 </main>
 </body>

@@ -39,9 +39,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div th:if="${dishes == null or dishes.isEmpty()}">
-        <h3>Nothing found sorry</h3>
+        <div th:if="${dishes != null and dishes.isEmpty()}">
+            <h3>Nothing found sorry</h3>
+        </div>
     </div>
 </main>
 </body>
