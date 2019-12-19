@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld - login</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <main>
+        <div class="margin-top margin_auto">
+            <form th:if="${session.logged == null}" th:action="@{/admin}" th:object="${loginForm}" method=POST>
+                <input type="text" th:field="*{name}" placeholder="name" />
+                <input type="password" th:field="*{password}" placeholder="12345" />
+
+                <input type="submit" class="btn_edit" value="login"/>
+            </form>
+            <a href="/"><h1>Navigate back</h1></a>
+            <h1><a class="btn_log" th:if="${session.logged == true}" href="/logout">log out</a></h1>
+        </div>
+    </main>
+</body>
+</html>
