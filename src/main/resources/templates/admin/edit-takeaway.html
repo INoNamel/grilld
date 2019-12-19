@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld Admin - edit takeaway</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header th:insert="index.html :: header"></header>
+<main>
+    <div class="margin-top-130-auto">
+        <h1>Admin Panel - edit takeaway</h1><br/>
+        <form action="/admin/takeaways/update-takeaway" th:if="${takeawayForm != null}" th:object="${takeawayForm}" method=POST>
+            <div class="flex flex-evenly margin-bottom">
+                <div class="order_box">
+                    <input type="hidden" th:field="${takeawayForm.id}" hidden required/>
+                    <h2 th:text="${'# '+takeawayForm.id}"></h2>
+                    <p th:text="${'Ordered on: '+takeawayForm.getTime() +' '+ takeawayForm.getDay()}"></p>
+                    <p th:text="${'Pickup at: '+takeawayForm.restaurant.address_town}"></p>
+                    <p th:text="${'Client tlf.: '+takeawayForm.login.tlf_type}"></p>
+                    <div th:if="${takeawayForm.status == 3}">
+                        Status: <span style="color: darkviolet">completed</span>
+                    </div>
+                    <div th:unless="${takeawayForm.status == 3}" >
+                        Status:
+                        <select th:field="${takeawayForm.status}" required>
+                            <option th:each="option:${status_list}" th:value="${option.key}" th:text="${option.value}" th:selected="${option.key == takeawayForm.status}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="order_box border_left">
+                    <h2>Order list:</h2>
+                    <table class="takeaway_table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">name</th>
+                            <th scope="col">price</th>
+                        </tr>
+                        </thead>
+                        <tr th:each="dish, counter:${takeawayForm.order}">
+                            <td th:text="${counter.count}"></td>
+                            <td th:text="${dish.name}"></td>
+                            <td th:text="${dish.price}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: right; font-weight: bold" th:if="${!takeawayForm.order.isEmpty()}" th:text="${'Total: '+#aggregates.sum(takeawayForm.order.![price])+' dkk'}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div th:if="${takeawayForm.status == 3}" class="flex flex-end">
+                <a class="btn_bck" th:href="@{/admin/takeaways}">Back</a>
+            </div>
+            <div th:unless="${takeawayForm.status == 3}" class="flex space-between">
+                <button type="submit" class="btn_edit">Update</button><a class="btn_bck" th:href="@{/admin/takeaways}">Back</a>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

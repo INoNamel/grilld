@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld Admin - view reservation</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header th:insert="index.html :: header"></header>
+<main>
+    <div class="margin-top-130-auto">
+        <h1>My Profile</h1>
+        <span id="msg" th:if="${message != null}" th:text="${message}"></span>
+        <form th:if="${session.logged != null}" action="/my-profile/update" th:object="${loginForm}" method=POST>
+            <h2 th:text="${loginForm.tlf_type}"></h2>
+            joined - <span th:text="${loginForm.joined}"></span><br>
+            <div>
+                Name: <input type="text" th:field="*{name}" pattern="[a-zA-Z][a-zA-Z ]{3,16}" placeholder="name" required/>
+                New Password: <input type="password" th:field="*{password}" pattern=".{3,16}" placeholder="password" required/>
+                <input type="hidden" th:field="${loginForm.tlf_type}" required/>
+
+                <input type="submit" class="btn_edit" value="Update"/>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

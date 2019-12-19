@@ -6,15 +6,19 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<header th:insert="index.html :: header"></header>
     <main>
-        <div class="margin-top margin_auto">
-            <form th:if="${session.logged == null}" th:action="@{/admin}" th:object="${loginForm}" method=POST>
-                <input type="text" th:field="*{name}" placeholder="name" />
-                <input type="password" th:field="*{password}" placeholder="12345" />
+        <div class="margin-top-130-auto">
+            <h1>Login</h1>
+            <form th:if="${session.logged == null}" th:action="@{/login}" th:object="${loginForm}" method=POST>
+                Tlf.: <input type="text" th:field="*{tlf_type}" placeholder="phone number" required/>
+                Password: <input type="password" th:field="*{password}" placeholder="password" required/>
 
-                <input type="submit" class="btn_edit" value="login"/>
+                <input type="submit" class="btn_edit" value="Log in"/>
+                <div id="msg" th:if="${message != null}">
+                    <p th:text="${message}"></p>
+                </div>
             </form>
-            <a href="/"><h1>Navigate back</h1></a>
             <h1><a class="btn_log" th:if="${session.logged == true}" href="/logout">log out</a></h1>
         </div>
     </main>

@@ -2,7 +2,7 @@ package com.grilled;
 import java.util.ArrayList;
 
 public class Points {
-    private Client guest;
+    private Login guest;
     private double points;
-    private ArrayList<Order> orders;
+    private ArrayList<Takeaway> takeaways;
 }

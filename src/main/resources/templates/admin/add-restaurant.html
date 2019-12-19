@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Grilld Admin - add restaurant</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header th:insert="index.html :: header"></header>
+<main>
+    <div class="margin-top-130-auto">
+        <h1>Admin Panel - add restaurant</h1><br/>
+        <form action="/admin/restaurants/add-restaurant" th:if="${restaurantForm != null}" th:object="${restaurantForm}" method=POST>
+            <div class="flex flex-evenly margin-bottom">
+                <div>
+                    Town: <br><input type="text" th:field="${restaurantForm.address_town}" placeholder="town address" required/>
+                </div>
+                <div>
+                    Street: <br><input type="text" th:field="${restaurantForm.address_street}" placeholder="street address" required/>
+                </div>
+                <div>
+                    Guests: <br><input type="number" min="1" max="99" step="1" th:field="${restaurantForm.guests_max}" placeholder="1-99" required/>
+                </div>
+            </div>
+            <div class="flex space-between margin-bottom">
+                <div>
+                    Workday open: <br><input type="text" th:field="${restaurantForm.workday_open}" value="08:00" placeholder="HH:mm" required/>
+                </div>
+                <div>
+                    Workday closed: <br><input type="text" th:field="${restaurantForm.workday_closed}" value="23:00" placeholder="HH:mm" required/>
+                </div>
+                <div>
+                    Weekend open: <br><input type="text" th:field="${restaurantForm.weekend_open}" value="10:00" placeholder="HH:mm" required/>
+                </div>
+                <div>
+                    Weekend closed: <br><input type="text" th:field="${restaurantForm.weekend_closed}" value="22:00" placeholder="HH:mm" required/>
+                </div>
+            </div>
+            <div class="flex space-between">
+                <button type="submit" class="btn_edit">Add</button><a class="btn_bck" th:href="@{/admin/restaurants}">Back</a>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>
